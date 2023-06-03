@@ -1,14 +1,18 @@
 from django.db import models
-from ..models.company import Company
+from company.models.company import Company
+from ..models.job_category import JobCategory
+from rest_framework import serializers
 
 
 class Job(models.Model):
     id = models.BigAutoField(primary_key=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    job_category = models.ForeignKey(JobCategory, on_delete=models.CASCADE)
     job_title = models.CharField(max_length=255)
     job_for_trade = models.CharField(max_length=255, null=True, blank=True)
     no_of_vacancies = models.IntegerField()
     employment_status = models.CharField(max_length=255)
+    salary = models.CharField(max_length=255)
     application_deadline = models.DateTimeField()
     cv_receiving_option = models.CharField(max_length=255, null=True, blank=True)
     job_responsibilities = models.TextField(null=True, blank=True)
@@ -27,3 +31,20 @@ class Job(models.Model):
 
     def __str__(self):
         return self.job_title
+
+
+class JobSerializer(serializers.ModelSerializer):
+    company_name = serializers.CharField(source='company.company_name', read_only=True)
+
+    class Meta:
+        model = Job
+        fields = ('id', 'job_title', 'company_name', 'job_location', 'no_of_vacancies')
+
+
+class JobDetailsSerializer(serializers.ModelSerializer):
+    company_id = serializers.IntegerField(source='company.id', read_only=True)
+    company_name = serializers.CharField(source='company.company_name', read_only=True)
+
+    class Meta:
+        model = Job
+        exclude = ('created_at', 'updated_at')

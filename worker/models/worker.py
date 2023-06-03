@@ -2,6 +2,7 @@ from django.db import models
 from common.models.country import Country
 from common.models.city import City
 from common.models.state import State
+from rest_framework import serializers
 
 
 class Worker(models.Model):
@@ -32,3 +33,19 @@ class Worker(models.Model):
 
     def __str__(self):
         return self.first_name
+
+
+class WorkerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Worker
+        fields = ('id', 'first_name', 'middle_name', 'last_name')
+
+
+class WorkerDetailsSerializer(serializers.ModelSerializer):
+    country_name = serializers.CharField(source='country.country_name', read_only=True)
+    state_name = serializers.CharField(source='state.state_name', read_only=True)
+    city_name = serializers.CharField(source='city.city_name', read_only=True)
+
+    class Meta:
+        model = Worker
+        exclude = ('created_at', 'updated_at')

@@ -1,5 +1,5 @@
 from django.db import models
-from company.models.job import Job
+from job.models.job import Job
 from ..models.worker import Worker
 
 

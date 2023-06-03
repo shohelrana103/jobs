@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # my app
     'company',
     'worker',
-    'common'
+    'common',
+    'job'
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models.company import Company
-from .models.job import Job
 
 
 # Register your models here.
@@ -12,4 +11,3 @@ class CompanyAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Company, CompanyAdmin)
-admin.site.register(Job)

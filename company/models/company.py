@@ -30,4 +30,14 @@ class Company(models.Model):
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = '__all__'
+        fields = ('id', 'company_name')
+
+
+class CompanyDetailsSerializer(serializers.ModelSerializer):
+    country_name = serializers.CharField(source='country.country_name', read_only=True)
+    state_name = serializers.CharField(source='state.state_name', read_only=True)
+    city_name = serializers.CharField(source='city.city_name', read_only=True)
+
+    class Meta:
+        model = Company
+        exclude = ('created_at', 'updated_at', 'updated_by')

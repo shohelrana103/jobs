@@ -1,5 +1,6 @@
 from django.urls import path
-from .views.company_view import CompanyView
+from .views.company_view import *
 urlpatterns = [
-    path('all/', CompanyView.as_view()),
+    path('details/<company_id>/', CompanyView.as_view()),
+    path('all/', get_all_company)
 ]
