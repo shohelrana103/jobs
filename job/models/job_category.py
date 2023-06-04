@@ -8,6 +8,9 @@ class JobCategory(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name_plural = 'Job Categories'
+
     def __str__(self):
         return self.category_name
 

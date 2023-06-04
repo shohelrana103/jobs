@@ -24,6 +24,9 @@ class Company(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.CharField(max_length=255, null=True, blank=True)
 
+    class Meta:
+        verbose_name_plural = 'Companies'
+
     def __str__(self):
         return self.company_name
 
