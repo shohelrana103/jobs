@@ -16,7 +16,7 @@ class EducationHistory(models.Model):
         verbose_name_plural = 'Education Histories'
 
     def __str__(self):
-        return self.degree_name
+        return self.degree.degree_name
 
 
 class EducationHistorySerializer(serializers.ModelSerializer):
