@@ -19,6 +19,7 @@ class Company(models.Model):
     contact_person_position = models.CharField(max_length=255)
     contact_person_mobile = models.CharField(max_length=255)
     contact_person_email = models.CharField(max_length=255)
+    company_logo = models.FileField(upload_to='worker/images', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.CharField(max_length=255, null=True, blank=True)

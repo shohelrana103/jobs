@@ -78,6 +78,17 @@ WSGI_APPLICATION = 'jobportal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'jobs',
+#         'USER': 'postgres',
+#         'PASSWORD': '1521876',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+#
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -88,6 +99,7 @@ DATABASES = {
         'PORT': '',
     }
 }
+
 
 
 # Password validation
@@ -131,6 +143,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [
    os.path.join(BASE_DIR, 'staticfiles/static/')
 ]
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
