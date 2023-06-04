@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework import serializers
 
 
 class EmploymentHistory(models.Model):
@@ -14,3 +15,9 @@ class EmploymentHistory(models.Model):
 
     def __str__(self):
         return self.company_name
+
+
+class EmploymentHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmploymentHistory
+        fields = ('id', 'company_name', 'designation', 'start_at', 'end_date', 'responsibilities', 'is_currently_working')

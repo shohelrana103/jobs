@@ -3,9 +3,9 @@ from common.models.country import Country
 from common.models.city import City
 from common.models.state import State
 from rest_framework import serializers
-from ..models.skill import Skill
-from ..models.employment_history import EmploymentHistory
-from ..models.education import EducationHistory
+from ..models.skill import Skill, SkillSerializer
+from ..models.employment_history import EmploymentHistory, EmploymentHistorySerializer
+from ..models.education import EducationHistory, EducationHistorySerializer
 
 
 class Worker(models.Model):
@@ -48,7 +48,18 @@ class WorkerDetailsSerializer(serializers.ModelSerializer):
     country_name = serializers.CharField(source='country.country_name', read_only=True)
     state_name = serializers.CharField(source='state.state_name', read_only=True)
     city_name = serializers.CharField(source='city.city_name', read_only=True)
+    educations = EducationHistorySerializer(read_only=True, many=True)
+    employment_history = EmploymentHistorySerializer(read_only=True, many=True)
+    skill_set = SkillSerializer(read_only=True, many=True)
+    photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Worker
         exclude = ('created_at', 'updated_at')
+
+    def get_photo(self, worker):
+        if worker.photo:
+            request = self.context.get('request')
+            return str(request.build_absolute_uri(worker.photo.url))
+        else:
+            return None

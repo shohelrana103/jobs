@@ -2,6 +2,7 @@ from django.db import models
 from company.models.company import Company
 from ..models.job_category import JobCategory
 from rest_framework import serializers
+from common.models.area import Area
 
 
 class Job(models.Model):
@@ -16,7 +17,7 @@ class Job(models.Model):
     application_deadline = models.DateTimeField()
     cv_receiving_option = models.CharField(max_length=255, null=True, blank=True)
     job_responsibilities = models.TextField(null=True, blank=True)
-    job_location = models.CharField(max_length=30, null=True, blank=True)
+    job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
     salary_type = models.CharField(max_length=255, null=True, blank=True)
     trade_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     certificate_course_requirements = models.CharField(max_length=255, null=True, blank=True)

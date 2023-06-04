@@ -22,7 +22,7 @@ def get_worker_details(request, worker_id):
             'message': 'Worker Not Found',
         }
         return JsonResponse(content, status=status.HTTP_200_OK)
-    serialized_company = WorkerDetailsSerializer(worker)
+    serialized_company = WorkerDetailsSerializer(worker, context={'request': request})
     content = {
         'status': 1,
         'message': 'Success',

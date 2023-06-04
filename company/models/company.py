@@ -38,7 +38,15 @@ class CompanyDetailsSerializer(serializers.ModelSerializer):
     country_name = serializers.CharField(source='country.country_name', read_only=True)
     state_name = serializers.CharField(source='state.state_name', read_only=True)
     city_name = serializers.CharField(source='city.city_name', read_only=True)
+    company_logo = serializers.SerializerMethodField()
 
     class Meta:
         model = Company
         exclude = ('created_at', 'updated_at', 'updated_by')
+
+    def get_company_logo(self, company):
+        if company.company_logo:
+            request = self.context.get('request')
+            return str(request.build_absolute_uri(company.company_logo.url))
+        else:
+            return None

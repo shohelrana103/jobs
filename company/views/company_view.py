@@ -29,7 +29,7 @@ class CompanyView(APIView):
                 'message': 'Company Not Found',
             }
             return JsonResponse(content, status=status.HTTP_200_OK)
-        serialized_company = CompanyDetailsSerializer(company)
+        serialized_company = CompanyDetailsSerializer(company, context={'request': request})
         content = {
             'status': 1,
             'message': 'Success',
