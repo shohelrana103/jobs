@@ -2,6 +2,7 @@ from django.db import models
 from common.models.country import Country
 from common.models.city import City
 from common.models.state import State
+from common.models.area import Area
 from rest_framework import serializers
 
 
@@ -14,6 +15,7 @@ class Company(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE)
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
     zip_code = models.CharField(max_length=30, null=True, blank=True)
     contact_person_name = models.CharField(max_length=255)
     contact_person_position = models.CharField(max_length=255)

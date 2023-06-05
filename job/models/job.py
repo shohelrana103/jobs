@@ -3,30 +3,50 @@ from company.models.company import Company
 from ..models.job_category import JobCategory
 from rest_framework import serializers
 from common.models.area import Area
+from ..models.employement_status import EmploymentStatus
+from ..models.resume_receiving_option import ResumeReceivingOption
+from common.models.degree import Degree
+from common.models.gender import Gender
+from worker.models.skill import Skill
+from ..models.job_type import JobType
+from ..models.job_level import JobLevel
+from ..models.word_place import WorkPlace
+from ..models.benefits import JobBenefit
+from common.models.country import Country
+from common.models.state import State
+from common.models.city import City
 
 
 class Job(models.Model):
     id = models.BigAutoField(primary_key=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     job_category = models.ForeignKey(JobCategory, on_delete=models.CASCADE)
     job_title = models.CharField(max_length=255)
-    job_for_trade = models.CharField(max_length=255, null=True, blank=True)
     no_of_vacancies = models.IntegerField()
-    employment_status = models.CharField(max_length=255)
-    salary = models.CharField(max_length=255)
+    job_level = models.ForeignKey(JobLevel, on_delete=models.CASCADE)
+    employment_status = models.ForeignKey(EmploymentStatus, on_delete=models.CASCADE)
+    salary_range = models.CharField(max_length=255)
+    work_place = models.ForeignKey(WorkPlace, on_delete=models.CASCADE)
+    degree_requirements = models.ForeignKey(Degree, on_delete=models.CASCADE)
+    benefits = models.ManyToManyField(JobBenefit)
+    age_require_minimum = models.IntegerField()
+    age_require_maximum = models.IntegerField()
+    experience_requirements = models.TextField(null=True, blank=True)
+    skills_requirements = models.ManyToManyField(Skill)
+    gender_requirements = models.ManyToManyField(Gender)
     application_deadline = models.DateTimeField()
-    cv_receiving_option = models.CharField(max_length=255, null=True, blank=True)
+    cv_receiving_option = models.ManyToManyField(ResumeReceivingOption)
     job_responsibilities = models.TextField(null=True, blank=True)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    state = models.ForeignKey(State, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
     job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
     salary_type = models.CharField(max_length=255, null=True, blank=True)
     trade_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     certificate_course_requirements = models.CharField(max_length=255, null=True, blank=True)
-    educational_requirements = models.CharField(max_length=255, null=True, blank=True)
-    age_restriction = models.IntegerField()
     special_restrictions = models.TextField(null=True, blank=True)
-    experience_requirements = models.TextField(null=True, blank=True)
-    skills_requirements = models.TextField(null=True, blank=True)
-    gender_requirements = models.CharField(max_length=255, null=True, blank=True)
+    job_for_trade = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
