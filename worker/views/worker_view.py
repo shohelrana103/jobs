@@ -9,7 +9,6 @@ from rest_framework.authentication import TokenAuthentication
 from ..models.worker import Worker, WorkerSerializer, WorkerDetailsSerializer
 
 
-
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
 # @permission_classes((IsAuthenticated,))

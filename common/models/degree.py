@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework import serializers
 
 
 class Degree(models.Model):
@@ -10,3 +11,9 @@ class Degree(models.Model):
 
     def __str__(self):
         return self.degree_name
+
+
+class DegreeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Degree
+        fields = ('id', 'degree_name')

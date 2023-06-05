@@ -39,9 +39,11 @@ class Worker(models.Model):
 
 
 class WorkerSerializer(serializers.ModelSerializer):
+    skill_set = SkillSerializer(read_only=True, many=True)
+
     class Meta:
         model = Worker
-        fields = ('id', 'first_name', 'middle_name', 'last_name')
+        fields = ('id', 'first_name', 'middle_name', 'last_name', 'skill_set')
 
 
 class WorkerDetailsSerializer(serializers.ModelSerializer):
