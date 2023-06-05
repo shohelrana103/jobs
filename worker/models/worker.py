@@ -6,6 +6,7 @@ from rest_framework import serializers
 from ..models.skill import Skill, SkillSerializer
 from ..models.employment_history import EmploymentHistory, EmploymentHistorySerializer
 from ..models.education import EducationHistory, EducationHistorySerializer
+from common.models.area import Area
 
 
 class Worker(models.Model):
@@ -20,6 +21,7 @@ class Worker(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, blank=True)
     address_line1 = models.TextField()
     address_line2 = models.TextField(null=True, blank=True)
     postal_code = models.CharField(max_length=30, null=True, blank=True)
