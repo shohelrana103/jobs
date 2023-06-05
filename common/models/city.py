@@ -1,6 +1,7 @@
 from django.db import models
 from ..models.country import Country
 from ..models.state import State
+from rest_framework import serializers
 
 
 class City(models.Model):
@@ -14,3 +15,9 @@ class City(models.Model):
 
     def __str__(self):
         return self.city_name
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ('id', 'city_name')

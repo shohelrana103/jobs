@@ -23,7 +23,10 @@ urlpatterns = [
                   path('company/', include('company.urls')),
                   path('job/', include('job.urls')),
                   path('worker/', include('worker.urls')),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('common/', include('common.urls')),
+
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,
+                                                                                           document_root=settings.MEDIA_ROOT)
 
 admin.site.site_header = "WorkersRus Administration"
 admin.site.site_title = "WorkersRus Administration Portal"

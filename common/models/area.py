@@ -2,6 +2,7 @@ from django.db import models
 from ..models.city import City
 from ..models.state import State
 from ..models.country import Country
+from rest_framework import serializers
 
 
 class Area(models.Model):
@@ -13,3 +14,9 @@ class Area(models.Model):
 
     def __str__(self):
         return self.area_name
+
+
+class AreaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Area
+        fields = ('id', 'area_name')
