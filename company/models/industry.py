@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework import serializers
 
 
 class Industry(models.Model):
@@ -10,3 +11,9 @@ class Industry(models.Model):
 
     def __str__(self):
         return self.industry_name
+
+
+class IndustrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Industry
+        fields = ('id', 'industry_name')

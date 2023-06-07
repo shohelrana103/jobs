@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from ..models.job_category import JobCategory, JobCategorySerializer
 from ..models.job import Job, JobSerializer, JobDetailsSerializer
+from company.models.industry import Industry
 
 
 @api_view(['GET'])
@@ -59,4 +60,24 @@ def get_job_detail(request, job_id):
     content['status'] = 1
     content['message'] = 'Success'
     content['job_details'] = serialized_job.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def get_job_by_industry(request, industry_id):
+    content = {
+        'status': 0
+    }
+    try:
+        industry = Industry.objects.get(pk=industry_id)
+    except:
+        content['message'] = 'Industry Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    jobs = Job.objects.filter(industry=industry)
+    serialized_jobs = JobSerializer(jobs, many=True)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['jobs'] = serialized_jobs.data
     return JsonResponse(content, status=status.HTTP_200_OK)
