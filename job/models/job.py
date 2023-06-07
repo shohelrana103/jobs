@@ -15,11 +15,13 @@ from ..models.benefits import JobBenefit
 from common.models.country import Country
 from common.models.state import State
 from common.models.city import City
+from company.models.industry import Industry
 
 
 class Job(models.Model):
     id = models.BigAutoField(primary_key=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    industry = models.ForeignKey(Industry, on_delete=models.CASCADE)
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     job_category = models.ForeignKey(JobCategory, on_delete=models.CASCADE)
     job_title = models.CharField(max_length=255)
