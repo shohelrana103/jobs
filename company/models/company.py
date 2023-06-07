@@ -10,7 +10,7 @@ from ..models.company_type import CompanyType
 class Company(models.Model):
     id = models.BigAutoField(primary_key=True)
     company_name = models.CharField(max_length=255)
-    company_type = models.ForeignKey(CompanyType, on_delete=models.CASCADE)
+    # company_type = models.ForeignKey(CompanyType, on_delete=models.CASCADE)
     company_contact_number = models.CharField(max_length=50)
     company_address_line_1 = models.TextField()
     company_address_line_2 = models.TextField(null=True, blank=True)
