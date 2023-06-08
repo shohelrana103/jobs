@@ -6,4 +6,4 @@ from .models.user_otp import UserOtp
 
 
 admin.site.register(Authentication)
-admin.site.register(UserOtp)
+# admin.site.register(UserOtp)
