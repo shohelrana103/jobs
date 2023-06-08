@@ -24,6 +24,7 @@ urlpatterns = [
                   path('job/', include('job.urls')),
                   path('worker/', include('worker.urls')),
                   path('common/', include('common.urls')),
+                  path('auth/', include('authentication.urls')),
 
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL,
                                                                                            document_root=settings.MEDIA_ROOT)
