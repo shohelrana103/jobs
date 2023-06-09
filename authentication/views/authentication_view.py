@@ -234,6 +234,7 @@ def worker_set_education(request):
 @authentication_classes((TokenAuthentication,))
 @permission_classes((IsAuthenticated,))
 def worker_set_skill(request):
+    Worker.objects.all().delete()
     content = {
         'status': 0
     }
