@@ -232,30 +232,28 @@ def worker_set_education(request):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-# @permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def worker_set_skill(request):
-    Worker.objects.all().delete()
-    # content = {
-    #     'status': 0
-    # }
-    # if all(k in request.data for k in ("user_id", "skill_list")):
-    #     user_id = request.data['user_id']
-    #     skill_list = request.data['skill_list']
-    #     try:
-    #         worker = Worker.objects.get(pk=user_id)
-    #     except Worker.DoesNotExist:
-    #         content['message'] = 'Worker Not Found'
-    #         return JsonResponse(content, status=status.HTTP_200_OK)
-    #     skills = []
-    #     for skill in skill_list:
-    #         skill_obj, create = Skill.objects.get_or_create(skill_name=skill)
-    #         skills.append(skill_obj)
-    #     worker.skill_set.add(*skills)
-    #     worker.save()
-    #     content['status'] = 1
-    #     content['message'] = 'Success'
-    #     return JsonResponse(content, status=status.HTTP_200_OK)
-    # else:
-    #     content['message'] = 'Parameter Missing!'
-    #     return JsonResponse(content, status=status.HTTP_200_OK)
-    return JsonResponse({"OK":"OK"}, status=status.HTTP_200_OK)
+    content = {
+        'status': 0
+    }
+    if all(k in request.data for k in ("user_id", "skill_list")):
+        user_id = request.data['user_id']
+        skill_list = request.data['skill_list']
+        try:
+            worker = Worker.objects.get(pk=user_id)
+        except Worker.DoesNotExist:
+            content['message'] = 'Worker Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        skills = []
+        for skill in skill_list:
+            skill_obj, create = Skill.objects.get_or_create(skill_name=skill)
+            skills.append(skill_obj)
+        worker.skill_set.add(*skills)
+        worker.save()
+        content['status'] = 1
+        content['message'] = 'Success'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)

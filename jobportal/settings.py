@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'job',
     'authentication',
     'rest_framework.authtoken',
+    'django_truncate'
 ]
 
 MIDDLEWARE = [
