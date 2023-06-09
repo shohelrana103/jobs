@@ -232,7 +232,7 @@ def worker_set_education(request):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def worker_set_skill(request):
     Worker.objects.all().delete()
     content = {
