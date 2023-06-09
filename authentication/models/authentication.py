@@ -31,4 +31,4 @@ class Authentication(models.Model):
 class AuthenticationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Authentication
-        fields = ('username', 'token')
+        fields = ('user_id', 'token', 'user_phone')
