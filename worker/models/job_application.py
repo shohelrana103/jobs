@@ -11,5 +11,5 @@ class JobApplication(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # def __str__(self):
-    #     return self.skill_name
+    def __str__(self):
+        return self.job_id.job_title
