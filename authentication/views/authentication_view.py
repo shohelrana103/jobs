@@ -110,7 +110,7 @@ def worker_send_otp_email(request):
             auth_user = Authentication.objects.get(email=email)
         except Authentication.DoesNotExist:
             # creating user
-            user_instance, is_create = User.objects.create_user(email)
+            user_instance = User.objects.create_user(email)
             # creating token
             token, create = Token.objects.get_or_create(user=user_instance)
             auth_user = Authentication.objects.create(email=email, username=email, token=token.key, user_type=2)
