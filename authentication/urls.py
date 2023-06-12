@@ -6,5 +6,7 @@ urlpatterns = [
     path('set/worker/basic/', worker_set_basic_information),
     path('set/worker/address/', worker_set_address),
     path('set/worker/education/', worker_set_education),
-    path('set/worker/skill/', worker_set_skill)
+    path('set/worker/skill/', worker_set_skill),
+    path('send/otp/email/', worker_send_otp_email),
+    path('verify/otp/email/', worker_verify_otp_email),
 ]

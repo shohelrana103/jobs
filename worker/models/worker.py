@@ -30,6 +30,8 @@ class Worker(models.Model):
     employment_history = models.ManyToManyField(EmploymentHistory, null=True, blank=True)
     skill_set = models.ManyToManyField(Skill)
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, blank=True, null=True)
+    passport_number = models.CharField(max_length=255, null=True, blank=True)
+    driving_license_number = models.CharField(max_length=255, null=True, blank=True)
     reference_id = models.CharField(max_length=255, null=True, blank=True)
     field_of_work = models.CharField(max_length=255, null=True, blank=True)
     photo = models.FileField(upload_to='worker/images', null=True, blank=True)

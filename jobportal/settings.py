@@ -81,27 +81,27 @@ WSGI_APPLICATION = 'jobportal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'jobs',
-#         'USER': 'postgres',
-#         'PASSWORD': '1521876',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'jobs',
-        'USER': 'rootuser',
-        'PASSWORD': 'jobs!123',
+        'USER': 'postgres',
+        'PASSWORD': '1521876',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'jobs',
+#         'USER': 'rootuser',
+#         'PASSWORD': 'jobs!123',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
 
 
 
@@ -152,3 +152,14 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Email
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'workersrus.ny@gmail.com'
+EMAIL_HOST_PASSWORD = 'QDS@123jobs'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'workersrus.ny@gmail.com'

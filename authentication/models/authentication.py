@@ -21,8 +21,8 @@ class Authentication(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.user_phone
+    # def __str__(self):
+    #     return self.auth_id
 
     class Meta:
         ordering = ['-auth_id']

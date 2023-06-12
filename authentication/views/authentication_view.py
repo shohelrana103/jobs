@@ -19,6 +19,8 @@ from common.models.area import Area
 from common.models.degree import Degree
 from worker.models.education import EducationHistory
 from worker.models.skill import Skill
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 @api_view(['POST'])
@@ -69,6 +71,94 @@ def worker_verify_otp(request):
         otp = request.data['otp']
         try:
             auth_user = Authentication.objects.get(user_phone=phone_number)
+        except Authentication.DoesNotExist:
+            content['message'] = 'Something Wrong!'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        # write send otp code here
+        user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
+        if user_otp and user_otp.otp == otp:
+            auth_serialized = AuthenticationSerializer(auth_user)
+            # worker details
+            worker = Worker.objects.get(pk=auth_user.user_id)
+            if worker.first_name and worker.country and worker.address_line1 and worker.educations.all() and worker.skill_set.all():
+                update_info = {"is_profile_update": True, "first_name": worker.first_name}
+            else:
+                update_info = {"is_profile_update": False, "first_name": None}
+            update_info.update(auth_serialized.data)
+            content['status'] = 1
+            content['message'] = 'Success'
+            content['data'] = update_info
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        else:
+            content['message'] = 'OTP Does Not Match!'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def worker_send_otp_email(request):
+    content = {
+        'status': 0
+    }
+    if 'email' in request.data:
+        email = request.data['email']
+        try:
+            auth_user = Authentication.objects.get(email=email)
+        except Authentication.DoesNotExist:
+            # creating user
+            user_instance, is_create = User.objects.get_or_create(email)
+            # creating token
+            token, create = Token.objects.get_or_create(user=user_instance)
+            auth_user = Authentication.objects.create(email=email, username=email, token=token.key, user_type=2)
+            # create worker
+            worker, cr = Worker.objects.get_or_create(email=email)
+            if cr:
+                auth_user.user_id = worker.id
+                auth_user.save()
+        # write send otp code here
+        otp = random.randint(100000, 999999)
+        UserOtp.objects.create(auth_user=auth_user,
+                               otp=otp,
+                               otp_send_time=datetime.now())
+        # send otp in email
+        subject = 'OTP'
+        message = 'Your OPT is' + str(otp)
+        email_from = settings.DEFAULT_FROM_EMAIL
+        try:
+            send_mail(
+                subject,
+                message,
+                email_from,
+                [email],
+                fail_silently=False,
+            )
+
+        except Exception as e:
+            pass
+        content['status'] = 1
+        content['message'] = 'OTP send successful'
+
+    else:
+        content['message'] = 'Require Parameter Missing'
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def worker_verify_otp_email(request):
+    content = {
+        'status': 0
+    }
+    if 'email' in request.data and 'otp' in request.data:
+        email = request.data['email']
+        otp = request.data['otp']
+        try:
+            auth_user = Authentication.objects.get(email=email)
         except Authentication.DoesNotExist:
             content['message'] = 'Something Wrong!'
             return JsonResponse(content, status=status.HTTP_200_OK)
