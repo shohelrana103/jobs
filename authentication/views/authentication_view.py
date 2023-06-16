@@ -126,7 +126,7 @@ def worker_send_otp_email(request):
                                otp_send_time=datetime.now())
         # send otp in email
         subject = 'OTP'
-        message = 'Your OPT is' + str(otp)
+        message = 'Your OTP is ' + str(otp)
         email_from = settings.DEFAULT_FROM_EMAIL
         try:
             send_mail(
