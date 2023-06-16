@@ -381,8 +381,15 @@ def worker_signup(request):
                 worker.save()
                 auth_user.user_id = worker.id
                 auth_user.save()
+            if worker.first_name and worker.country and worker.address_line1 and worker.educations.all() and worker.skill_set.all():
+                update_info = {"is_profile_update": True, "first_name": worker.first_name}
+            else:
+                update_info = {"is_profile_update": False, "first_name": worker.first_name}
+            auth_serialized = AuthenticationSerializer(auth_user)
+            update_info.update(auth_serialized.data)
         content['status'] = 1
         content['message'] = 'Signup successful'
+        content['data'] = update_info
 
     else:
         content['message'] = 'Require Parameter Missing'
