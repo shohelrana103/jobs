@@ -231,7 +231,8 @@ def worker_set_address(request):
     content = {
         'status': 0
     }
-    if all(k in request.data for k in ("user_id", "country_id", "state_id", "city_id", "area_id", "address_line1", "postal_code")):
+    if all(k in request.data for k in
+           ("user_id", "country_id", "state_id", "city_id", "area_id", "address_line1", "postal_code")):
         user_id = request.data['user_id']
         country_id = request.data['country_id']
         state_id = request.data['state_id']
@@ -308,7 +309,8 @@ def worker_set_education(request):
             else:
                 passing_year = None
             education_obj = EducationHistory.objects.create(degree=degree_obj, institute=degree['institute'],
-                                                     passing_year=passing_year, is_currently_reading=bool(degree['is_currently_reading']))
+                                                            passing_year=passing_year,
+                                                            is_currently_reading=bool(degree['is_currently_reading']))
             education_list.append(education_obj)
         worker.educations.add(*education_list)
         worker.save()
@@ -347,3 +349,41 @@ def worker_set_skill(request):
     else:
         content['message'] = 'Parameter Missing!'
         return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def worker_signup(request):
+    content = {
+        'status': 0
+    }
+    if 'first_name' in request.data and 'last_name' in request.data and 'phone_number' in request.data:
+        phone_number = request.data['phone_number']
+        first_name = request.data['first_name']
+        last_name = request.data['last_name']
+        auth_user = Authentication.objects.filter(user_phone=phone_number).first()
+        if auth_user:
+            content['message'] = "This phone number already used"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        else:
+            # creating user
+            user_instance = User.objects.create_user(phone_number)
+            # user_instance, is_create = User.objects.get_or_create()
+            # creating token
+            token, create = Token.objects.get_or_create(user=user_instance)
+            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key, user_type=2)
+            # create worker
+            worker, cr = Worker.objects.get_or_create(phone_number=phone_number)
+            if cr:
+                worker.first_name = first_name
+                worker.last_name = last_name
+                worker.save()
+                auth_user.user_id = worker.id
+                auth_user.save()
+        content['status'] = 1
+        content['message'] = 'Signup successful'
+
+    else:
+        content['message'] = 'Require Parameter Missing'
+    return JsonResponse(content, status=status.HTTP_200_OK)

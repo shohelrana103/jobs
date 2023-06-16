@@ -9,4 +9,5 @@ urlpatterns = [
     path('set/worker/skill/', worker_set_skill),
     path('send/otp/email/', worker_send_otp_email),
     path('verify/otp/email/', worker_verify_otp_email),
+    path('signup/', worker_signup),
 ]
