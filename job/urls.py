@@ -5,4 +5,5 @@ urlpatterns = [
     path('get/<int:category_id>/', get_job_by_category),
     path('details/<int:job_id>/', get_job_detail),
     path('get/industry/<int:industry_id>/', get_job_by_industry),
+    path('all/', get_all_job),
 ]

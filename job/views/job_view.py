@@ -81,3 +81,18 @@ def get_job_by_industry(request, industry_id):
     content['message'] = 'Success'
     content['jobs'] = serialized_jobs.data
     return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def get_all_job(request):
+    content = {
+        'status': 0
+    }
+    jobs = Job.objects.all()
+    serialized_jobs = JobSerializer(jobs, many=True)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['jobs'] = serialized_jobs.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
