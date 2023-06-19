@@ -16,6 +16,7 @@ from common.models.country import Country
 from common.models.state import State
 from common.models.city import City
 from company.models.industry import Industry
+from ..models.job_placement import JobPlacement
 
 
 class Job(models.Model):
@@ -30,25 +31,26 @@ class Job(models.Model):
     employment_status = models.ForeignKey(EmploymentStatus, on_delete=models.CASCADE)
     salary_range = models.CharField(max_length=255)
     work_place = models.ForeignKey(WorkPlace, on_delete=models.CASCADE)
-    degree_requirements = models.ForeignKey(Degree, on_delete=models.CASCADE)
+    degree_requirements = models.ForeignKey(Degree, on_delete=models.CASCADE, null=True, blank=True)
     benefits = models.ManyToManyField(JobBenefit)
-    age_require_minimum = models.IntegerField()
-    age_require_maximum = models.IntegerField()
+    age_require_minimum = models.IntegerField(null=True, blank=True)
+    age_require_maximum = models.IntegerField(null=True, blank=True)
     experience_requirements = models.TextField(null=True, blank=True)
     skills_requirements = models.ManyToManyField(Skill)
     gender_requirements = models.ManyToManyField(Gender)
     application_deadline = models.DateTimeField()
     cv_receiving_option = models.ManyToManyField(ResumeReceivingOption)
     job_responsibilities = models.TextField(null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    state = models.ForeignKey(State, on_delete=models.CASCADE)
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
+    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
     salary_type = models.CharField(max_length=255, null=True, blank=True)
     trade_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     certificate_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     special_restrictions = models.TextField(null=True, blank=True)
     job_for_trade = models.CharField(max_length=255, null=True, blank=True)
+    job_placement = models.ForeignKey(JobPlacement, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
