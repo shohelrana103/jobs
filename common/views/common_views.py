@@ -7,6 +7,7 @@ from ..models.country import Country, CountrySerializer
 from ..models.state import State, StateSerializer
 from ..models.city import City, CitySerializer
 from ..models.area import Area, AreaSerializer
+from ..models.degree import Degree, DegreeSerializer
 
 
 @api_view(['GET'])
@@ -82,4 +83,19 @@ def get_all_area(request, country_id):
     content['status'] = 1
     content['message'] = 'Success'
     content['areas'] = serialized_jobs.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def get_all_degrees(request):
+    content = {
+        'status': 0
+    }
+    degrees = Degree.objects.all()
+    serialized_degree = DegreeSerializer(degrees, many=True)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['areas'] = serialized_degree.data
     return JsonResponse(content, status=status.HTTP_200_OK)
