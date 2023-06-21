@@ -126,6 +126,7 @@ def company_profile_update(request):
         company.contact_person_mobile = contact_person_mobile
         company.contact_person_email = contact_person_email
         company.save()
+        content['status'] = 1
         content['message'] = "Update successful"
         return JsonResponse(content, status=status.HTTP_200_OK)
     else:
