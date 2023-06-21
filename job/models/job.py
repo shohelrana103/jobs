@@ -61,6 +61,7 @@ class Job(models.Model):
 class JobSerializer(serializers.ModelSerializer):
     company_name = serializers.CharField(source='company.company_name', read_only=True)
     job_type = serializers.CharField(source='job_type.type_name', read_only=True)
+    job_category = serializers.CharField(source='job_category.category_name', read_only=True)
     country = serializers.CharField(source='country.country_name', read_only=True)
     state = serializers.CharField(source='state.state_name', read_only=True)
     city = serializers.CharField(source='city.city_name', read_only=True)
@@ -68,7 +69,7 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'country', 'state', 'city', 'job_area',
+        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
                   'application_deadline')
 
 
