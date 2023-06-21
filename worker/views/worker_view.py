@@ -96,9 +96,9 @@ def worker_applied_job(request, worker_id):
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_applied_job.data
-    return JsonResponse(content, status=status.HTTP_200_OK) \
- \
- \
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
 @permission_classes((IsAuthenticated,))
