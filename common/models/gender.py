@@ -1,4 +1,5 @@
 from django.db import models
+from rest_framework import serializers
 
 
 class Gender(models.Model):
@@ -10,3 +11,9 @@ class Gender(models.Model):
 
     def __str__(self):
         return self.gender_name
+
+
+class GenderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gender
+        fields = ('id', 'gender_name')

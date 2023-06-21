@@ -36,15 +36,32 @@ class Company(models.Model):
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    industry = serializers.CharField(source='industry.industry_name', read_only=True)
+    country = serializers.CharField(source='country.country_name', read_only=True)
+    state = serializers.CharField(source='state.state_name', read_only=True)
+    city = serializers.CharField(source='city.city_name', read_only=True)
+    area = serializers.CharField(source='area.area_name', read_only=True)
+    company_logo = serializers.SerializerMethodField()
+
     class Meta:
         model = Company
-        fields = ('id', 'company_name')
+        fields = ('id', 'industry', 'company_name', 'company_logo', 'company_contact_number', 'country',
+                  'state', 'city', 'area')
+
+    def get_company_logo(self, company):
+        if company.company_logo:
+            request = self.context.get('request')
+            return str(request.build_absolute_uri(company.company_logo.url))
+        else:
+            return None
 
 
 class CompanyDetailsSerializer(serializers.ModelSerializer):
-    country_name = serializers.CharField(source='country.country_name', read_only=True)
-    state_name = serializers.CharField(source='state.state_name', read_only=True)
-    city_name = serializers.CharField(source='city.city_name', read_only=True)
+    industry = serializers.CharField(source='industry.industry_name', read_only=True)
+    country = serializers.CharField(source='country.country_name', read_only=True)
+    state = serializers.CharField(source='state.state_name', read_only=True)
+    city = serializers.CharField(source='city.city_name', read_only=True)
+    area = serializers.CharField(source='area.area_name', read_only=True)
     company_logo = serializers.SerializerMethodField()
 
     class Meta:

@@ -4,14 +4,14 @@ from ..models.job_category import JobCategory
 from rest_framework import serializers
 from common.models.area import Area
 from ..models.employement_status import EmploymentStatus
-from ..models.resume_receiving_option import ResumeReceivingOption
+from ..models.resume_receiving_option import ResumeReceivingOption, ResumeReceivingOptionStatusSerializer
 from common.models.degree import Degree
-from common.models.gender import Gender
-from worker.models.skill import Skill
+from common.models.gender import Gender, GenderSerializer
+from worker.models.skill import Skill, SkillSerializer
 from ..models.job_type import JobType
 from ..models.job_level import JobLevel
 from ..models.word_place import WorkPlace
-from ..models.benefits import JobBenefit
+from ..models.benefits import JobBenefit, JobBenefitSerializer
 from common.models.country import Country
 from common.models.state import State
 from common.models.city import City
@@ -60,15 +60,35 @@ class Job(models.Model):
 
 class JobSerializer(serializers.ModelSerializer):
     company_name = serializers.CharField(source='company.company_name', read_only=True)
+    job_type = serializers.CharField(source='job_type.type_name', read_only=True)
+    country = serializers.CharField(source='country.country_name', read_only=True)
+    state = serializers.CharField(source='state.state_name', read_only=True)
+    city = serializers.CharField(source='city.city_name', read_only=True)
+    job_area = serializers.CharField(source='area.area_name', read_only=True)
 
     class Meta:
         model = Job
-        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies')
+        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'country', 'state', 'city', 'job_area',
+                  'application_deadline')
 
 
 class JobDetailsSerializer(serializers.ModelSerializer):
+    industry = serializers.CharField(source='industry.industry_name', read_only=True)
     company_id = serializers.IntegerField(source='company.id', read_only=True)
-    company_name = serializers.CharField(source='company.company_name', read_only=True)
+    company = serializers.CharField(source='company.company_name', read_only=True)
+    job_category = serializers.CharField(source='job_category.category_name', read_only=True)
+    job_type = serializers.CharField(source='job_type.type_name', read_only=True)
+    job_level = serializers.CharField(source='job_level.option_name', read_only=True)
+    employment_status = serializers.CharField(source='employment_status.status_name', read_only=True)
+    country = serializers.CharField(source='country.country_name', read_only=True)
+    state = serializers.CharField(source='state.state_name', read_only=True)
+    city = serializers.CharField(source='city.city_name', read_only=True)
+    job_area = serializers.CharField(source='area.area_name', read_only=True)
+    work_place = serializers.CharField(source='work_place.work_place', read_only=True)
+    benefits = JobBenefitSerializer(many=True)
+    skills_requirements = SkillSerializer(many=True)
+    gender_requirements = GenderSerializer(many=True)
+    cv_receiving_option = ResumeReceivingOptionStatusSerializer(many=True)
 
     class Meta:
         model = Job

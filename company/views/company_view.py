@@ -51,7 +51,7 @@ def get_all_company(request):
         'status': 0
     }
     companies = Company.objects.all()
-    serialized_jobs = CompanySerializer(companies, many=True)
+    serialized_jobs = CompanySerializer(companies, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['companies'] = serialized_jobs.data
