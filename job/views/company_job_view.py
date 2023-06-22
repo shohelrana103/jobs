@@ -19,6 +19,8 @@ from common.models.country import Country
 from common.models.state import State
 from common.models.city import City
 from common.models.area import Area
+from worker.models.skill import Skill, SkillSerializer
+
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
@@ -107,6 +109,21 @@ def get_job_benefits(request):
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = job_benefits_serialized.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def get_job_skills(request):
+    content = {
+        'status': 0
+    }
+    job_skills = Skill.objects.all()
+    job_skills_serialized = SkillSerializer(job_skills, many=True)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['data'] = job_skills_serialized.data
     return JsonResponse(content, status=status.HTTP_200_OK)
 
 
