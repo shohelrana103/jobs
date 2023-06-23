@@ -55,6 +55,7 @@ class WorkerDetailsSerializer(serializers.ModelSerializer):
     country_name = serializers.CharField(source='country.country_name', read_only=True)
     state_name = serializers.CharField(source='state.state_name', read_only=True)
     city_name = serializers.CharField(source='city.city_name', read_only=True)
+    area_name = serializers.CharField(source='area.area_name', read_only=True)
     educations = EducationHistorySerializer(read_only=True, many=True)
     employment_history = EmploymentHistorySerializer(read_only=True, many=True)
     skill_set = SkillSerializer(read_only=True, many=True)

@@ -10,6 +10,7 @@ from ..models.worker import Worker, WorkerSerializer, WorkerDetailsSerializer
 from job.models.job import Job, JobSerializer
 from ..models.job_application import JobApplication
 from ..models.worker_shortlisted_job import WorkerShortListedJob
+from ..models.employment_history import EmploymentHistory
 
 
 @api_view(['GET'])
@@ -148,3 +149,38 @@ def worker_shortlisted_job(request, worker_id):
     content['message'] = 'Success'
     content['data'] = serialized_applied_job.data
     return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def set_worker_experiences(request):
+    content = {
+        'status': 0
+    }
+    if 'worker_id' in request.data and 'experience_list' in request.data:
+        worker_id = request.data['worker_id']
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+        except:
+            content['message'] = 'Worker Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        experience_list = request.data['experience_list']
+        experiences_to_add = []
+        for experience in experience_list:
+            created_experience = EmploymentHistory.objects.create(
+                company_name=experience['company_name'],
+                designation=experience['designation'],
+                start_at=experience['start_at'],
+                end_date=experience['end_at'],
+                responsibilities=experience['responsibilities'],
+                is_currently_working=bool(experience['is_currently_working'])
+            )
+            experiences_to_add.append(created_experience)
+        worker.employment_history.add(*experiences_to_add)
+        content['status'] = 1
+        content['message'] = 'Experience Set Successful'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)

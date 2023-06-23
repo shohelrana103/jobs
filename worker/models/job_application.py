@@ -11,5 +11,8 @@ class JobApplication(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name_plural = 'My Applied Jobs'
+
     def __str__(self):
         return self.job_id.job_title
