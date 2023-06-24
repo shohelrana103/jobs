@@ -29,7 +29,8 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://workersrus.netlify.app/",
+    "https://workersrus.netlify.app",
+    "http://workersrus.netlify.app",
 ]
 
 # Application definition
