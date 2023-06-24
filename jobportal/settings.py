@@ -28,6 +28,10 @@ DEBUG = False
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOWED_ORIGINS = [
+    "https://workersrus.netlify.app/",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
