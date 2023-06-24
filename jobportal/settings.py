@@ -25,14 +25,6 @@ SECRET_KEY = 'django-insecure-3o5-qsz=^_gs^^h^^p9b4-udq#6v!s^xcfx*_6@9s6v9z+#75*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-CORS_ORIGIN_ALLOW_ALL = True
-
-CORS_ORIGIN_WHITELIST = [
-    "https://workersrus.netlify.app",
-    "http://workersrus.netlify.app",
-]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -65,6 +57,15 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
+
+ALLOWED_HOSTS = ['*']
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = [
+    "https://workersrus.netlify.app",
+    "http://workersrus.netlify.app",
+]
+
 
 ROOT_URLCONF = 'jobportal.urls'
 
