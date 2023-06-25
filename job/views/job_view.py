@@ -16,7 +16,7 @@ def get_job_category(request):
         'status': 0
     }
     job_categories = JobCategory.objects.all()
-    serialized_categories = JobCategorySerializer(job_categories, many=True)
+    serialized_categories = JobCategorySerializer(job_categories, many=True,context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['job_categories'] = serialized_categories.data
