@@ -217,7 +217,7 @@ def upload_worker_resume(request):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def upload_worker_video_resume(request):
     content = {
         'status': 0
