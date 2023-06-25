@@ -8,5 +8,7 @@ urlpatterns = [
     path('job/shortlist/', worker_shortlist_job),
     path('shortlist/job/<int:worker_id>/', worker_shortlisted_job),
     path('set/experiences/', set_worker_experiences),
+    path('upload/resume/', upload_worker_resume),
+    path('upload/video/resume/', upload_worker_video_resume),
 
 ]

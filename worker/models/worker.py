@@ -36,6 +36,7 @@ class Worker(models.Model):
     field_of_work = models.CharField(max_length=255, null=True, blank=True)
     photo = models.FileField(upload_to='worker/images', null=True, blank=True)
     attachment = models.FileField(upload_to='worker/files', null=True, blank=True)
+    video_resume = models.FileField(upload_to='worker/video', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 

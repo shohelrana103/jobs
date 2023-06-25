@@ -153,7 +153,7 @@ def worker_shortlisted_job(request, worker_id):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-# @permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def set_worker_experiences(request):
     content = {
         'status': 0
@@ -180,6 +180,64 @@ def set_worker_experiences(request):
         worker.employment_history.add(*experiences_to_add)
         content['status'] = 1
         content['message'] = 'Experience Set Successful'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def upload_worker_resume(request):
+    content = {
+        'status': 0
+    }
+    if 'worker_id' in request.data and 'attachment' in request.data:
+        worker_id = request.data['worker_id']
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+        except:
+            content['message'] = 'Worker Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        attachment = request.FILES.get('attachment', False)
+        if attachment is not False:
+            worker.attachment = attachment
+            worker.save()
+        else:
+            content['message'] = 'Require File'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        content['status'] = 1
+        content['message'] = 'Attachment Added Successful'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def upload_worker_video_resume(request):
+    content = {
+        'status': 0
+    }
+    if 'worker_id' in request.data and 'video_resume' in request.data:
+        worker_id = request.data['worker_id']
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+        except:
+            content['message'] = 'Worker Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        video_resume = request.FILES.get('attachment', False)
+        if video_resume is not False:
+            worker.video_resume = video_resume
+            worker.save()
+        else:
+            content['message'] = 'Require File'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        content['status'] = 1
+        content['message'] = 'Video Added Successful'
         return JsonResponse(content, status=status.HTTP_200_OK)
     else:
         content['message'] = 'Parameter Missing!'
