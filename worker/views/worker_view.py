@@ -229,7 +229,7 @@ def upload_worker_video_resume(request):
         except:
             content['message'] = 'Worker Not Found'
             return JsonResponse(content, status=status.HTTP_200_OK)
-        video_resume = request.FILES.get('attachment', False)
+        video_resume = request.FILES.get('video_resume', False)
         if video_resume is not False:
             worker.video_resume = video_resume
             worker.save()
