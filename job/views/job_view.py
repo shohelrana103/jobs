@@ -130,5 +130,6 @@ def get_all_job_worker_id(request, worker_id):
         send_data.append(serialized_job)
     content['status'] = 1
     content['message'] = 'Success'
+
     content['jobs'] = send_data
     return JsonResponse(content, status=status.HTTP_200_OK)
