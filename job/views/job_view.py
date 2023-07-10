@@ -6,6 +6,9 @@ from rest_framework.authentication import TokenAuthentication
 from ..models.job_category import JobCategory, JobCategorySerializer
 from ..models.job import Job, JobSerializer, JobDetailsSerializer
 from company.models.industry import Industry
+from worker.models.worker import Worker
+from worker.models.job_application import JobApplication
+from worker.models.worker_shortlisted_job import WorkerShortListedJob
 
 
 @api_view(['GET'])
@@ -95,4 +98,37 @@ def get_all_job(request):
     content['status'] = 1
     content['message'] = 'Success'
     content['jobs'] = serialized_jobs.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def get_all_job_worker_id(request, worker_id):
+    content = {
+        'status': 0
+    }
+    try:
+        worker = Worker.objects.get(pk=worker_id)
+    except:
+        content['message'] = 'Worker not found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('worker_id', flat=True))
+    applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('worker_id', flat=True))
+    jobs = Job.objects.all()
+    send_data = []
+    for job in jobs:
+        serialized_job = JobSerializer(job).data
+        if job.id in applied_job_ids:
+            serialized_job.update({"is_applied": True})
+        else:
+            serialized_job.update({"is_applied": False})
+        if job.id in shortlisted_job_ids:
+            serialized_job.update({"is_shortlisted": True})
+        else:
+            serialized_job.update({"is_shortlisted": False})
+        send_data.append(serialized_job)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['jobs'] = send_data
     return JsonResponse(content, status=status.HTTP_200_OK)
