@@ -37,10 +37,15 @@ class Company(models.Model):
 
 class CompanySerializer(serializers.ModelSerializer):
     industry = serializers.CharField(source='industry.industry_name', read_only=True)
+    industry_id = serializers.IntegerField(source='industry.id', read_only=True)
     country = serializers.CharField(source='country.country_name', read_only=True)
+    country_id = serializers.IntegerField(source='country.id', read_only=True)
     state = serializers.CharField(source='state.state_name', read_only=True)
+    state_id = serializers.IntegerField(source='state.id', read_only=True)
     city = serializers.CharField(source='city.city_name', read_only=True)
+    city_id = serializers.IntegerField(source='city.id', read_only=True)
     area = serializers.CharField(source='area.area_name', read_only=True)
+    area_id = serializers.IntegerField(source='area.id', read_only=True)
     company_logo = serializers.SerializerMethodField()
 
     class Meta:
@@ -58,10 +63,15 @@ class CompanySerializer(serializers.ModelSerializer):
 
 class CompanyDetailsSerializer(serializers.ModelSerializer):
     industry = serializers.CharField(source='industry.industry_name', read_only=True)
+    industry_id = serializers.IntegerField(source='industry.id', read_only=True)
     country = serializers.CharField(source='country.country_name', read_only=True)
+    country_id = serializers.IntegerField(source='country.id', read_only=True)
     state = serializers.CharField(source='state.state_name', read_only=True)
+    state_id = serializers.IntegerField(source='state.id', read_only=True)
     city = serializers.CharField(source='city.city_name', read_only=True)
+    city_id = serializers.IntegerField(source='city.id', read_only=True)
     area = serializers.CharField(source='area.area_name', read_only=True)
+    area_id = serializers.IntegerField(source='area.id', read_only=True)
     company_logo = serializers.SerializerMethodField()
 
     class Meta:
