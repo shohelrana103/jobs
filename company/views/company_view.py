@@ -147,7 +147,7 @@ def get_all_job_by_company(request, company_id):
         content['message'] = 'Company Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
     company_jobs = Job.objects.filter(company=company)
-    serialized_jobs = JobSerializer(company_jobs, many=True)
+    serialized_jobs = JobSerializer(company_jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_jobs.data

@@ -41,7 +41,7 @@ def get_job_by_category(request, category_id):
         return JsonResponse(content, status=status.HTTP_200_OK)
     jobs = Job.objects.filter(job_category=job_category)
     print(jobs)
-    serialized_jobs = JobSerializer(jobs, many=True)
+    serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['jobs'] = serialized_jobs.data
@@ -60,7 +60,7 @@ def get_job_detail(request, job_id):
     except:
         content['message'] = 'Job Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    serialized_job = JobDetailsSerializer(job)
+    serialized_job = JobDetailsSerializer(job, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['job_details'] = serialized_job.data
@@ -80,7 +80,7 @@ def get_job_by_industry(request, industry_id):
         content['message'] = 'Industry Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
     jobs = Job.objects.filter(industry=industry)
-    serialized_jobs = JobSerializer(jobs, many=True)
+    serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['jobs'] = serialized_jobs.data
@@ -95,7 +95,7 @@ def get_all_job(request):
         'status': 0
     }
     jobs = Job.objects.all()
-    serialized_jobs = JobSerializer(jobs, many=True)
+    serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['jobs'] = serialized_jobs.data
@@ -120,7 +120,7 @@ def get_all_job_worker_id(request, worker_id):
     jobs = Job.objects.all()
     send_data = []
     for job in jobs:
-        serialized_job = JobSerializer(job).data
+        serialized_job = JobSerializer(job, context={'request': request}).data
         if job.id in applied_job_ids:
             serialized_job.update({"is_applied": True})
         else:

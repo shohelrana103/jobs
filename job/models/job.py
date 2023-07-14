@@ -66,11 +66,19 @@ class JobSerializer(serializers.ModelSerializer):
     state = serializers.CharField(source='state.state_name', read_only=True)
     city = serializers.CharField(source='city.city_name', read_only=True)
     job_area = serializers.CharField(source='area.area_name', read_only=True)
+    company_logo = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
-                  'application_deadline', 'salary_range')
+                  'application_deadline', 'salary_range', 'company_logo')
+
+    def get_company_logo(self, obj):
+        if obj.company.company_logo:
+            request = self.context.get('request')
+            return str(request.build_absolute_uri(obj.company.company_logo.url))
+        else:
+            return None
 
 
 class JobDetailsSerializer(serializers.ModelSerializer):
@@ -91,7 +99,15 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     gender_requirements = GenderSerializer(many=True)
     degree_requirements = serializers.CharField(source='degree_requirements.degree_name', read_only=True)
     cv_receiving_option = ResumeReceivingOptionStatusSerializer(many=True)
+    company_logo = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
         exclude = ('created_at', 'updated_at')
+
+    def get_company_logo(self, obj):
+        if obj.company.company_logo:
+            request = self.context.get('request')
+            return str(request.build_absolute_uri(obj.company.company_logo.url))
+        else:
+            return None

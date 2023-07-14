@@ -94,7 +94,7 @@ def worker_applied_job(request, worker_id):
         return JsonResponse(content, status=status.HTTP_200_OK)
     applied_jobs = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=applied_jobs)
-    serialized_applied_job = JobSerializer(jobs, many=True)
+    serialized_applied_job = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_applied_job.data
@@ -174,7 +174,7 @@ def worker_shortlisted_job(request, worker_id):
         return JsonResponse(content, status=status.HTTP_200_OK)
     shortlisted_jobs = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=shortlisted_jobs)
-    serialized_applied_job = JobSerializer(jobs, many=True)
+    serialized_applied_job = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_applied_job.data
@@ -196,7 +196,7 @@ def get_worker_favorite_job(request, worker_id):
         return JsonResponse(content, status=status.HTTP_200_OK)
     favorite_jobs = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=favorite_jobs)
-    serialized_applied_job = JobSerializer(jobs, many=True)
+    serialized_applied_job = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_applied_job.data
