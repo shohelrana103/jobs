@@ -157,11 +157,13 @@ def worker_make_job_favorite(request):
                 worker_job.save()
                 content['status'] = 1
                 content['message'] = 'Favorite Remove'
+                return JsonResponse(content, status=status.HTTP_200_OK)
             else:
                 worker_job.is_active = True
                 worker_job.save()
                 content['status'] = 1
                 content['message'] = 'Favorite Successful'
+                return JsonResponse(content, status=status.HTTP_200_OK)
         except:
             worker_job = WorkerFavoriteJob.objects.create(job_id=job, worker_id=worker)
             content['status'] = 1
