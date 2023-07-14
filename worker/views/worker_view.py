@@ -150,10 +150,23 @@ def worker_make_job_favorite(request):
         except:
             content['message'] = 'Worker Not Found'
             return JsonResponse(content, status=status.HTTP_200_OK)
-        worker_job, is_create = WorkerFavoriteJob.objects.get_or_create(job_id=job, worker_id=worker)
-        content['status'] = 1
-        content['message'] = 'Favorite Successful'
-        return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            worker_job = WorkerFavoriteJob.objects.get(job_id=job, worker_id=worker)
+            if worker_job.is_active:
+                worker_job.is_active = False
+                worker_job.save()
+                content['status'] = 1
+                content['message'] = 'Favorite Remove'
+            else:
+                worker_job.is_active = True
+                worker_job.save()
+                content['status'] = 1
+                content['message'] = 'Favorite Successful'
+        except:
+            worker_job = WorkerFavoriteJob.objects.create(job_id=job, worker_id=worker)
+            content['status'] = 1
+            content['message'] = 'Favorite Successful'
+            return JsonResponse(content, status=status.HTTP_200_OK)
     else:
         content['message'] = 'Parameter Missing!'
         return JsonResponse(content, status=status.HTTP_200_OK)
@@ -194,7 +207,7 @@ def get_worker_favorite_job(request, worker_id):
     except:
         content['message'] = 'Worker Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    favorite_jobs = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    favorite_jobs = list(WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=favorite_jobs)
     serialized_applied_job = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
