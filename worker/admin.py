@@ -5,6 +5,7 @@ from .models.job_application import JobApplication
 from .models.education import EducationHistory
 from .models.employment_history import EmploymentHistory
 from .models.worker_shortlisted_job import WorkerShortListedJob
+from .models.job_favorite import WorkerFavoriteJob
 
 
 # Register your models here.
@@ -24,3 +25,4 @@ admin.site.register(JobApplication, JobApplicationAdmin)
 admin.site.register(EducationHistory)
 admin.site.register(EmploymentHistory)
 admin.site.register(WorkerShortListedJob)
+admin.site.register(WorkerFavoriteJob)

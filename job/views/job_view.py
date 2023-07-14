@@ -9,6 +9,7 @@ from company.models.industry import Industry
 from worker.models.worker import Worker
 from worker.models.job_application import JobApplication
 from worker.models.worker_shortlisted_job import WorkerShortListedJob
+from worker.models.job_favorite import WorkerFavoriteJob
 
 
 @api_view(['GET'])
@@ -115,6 +116,7 @@ def get_all_job_worker_id(request, worker_id):
         return JsonResponse(content, status=status.HTTP_200_OK)
     shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('worker_id', flat=True))
     applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('worker_id', flat=True))
+    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('worker_id', flat=True))
     jobs = Job.objects.all()
     send_data = []
     for job in jobs:
@@ -127,6 +129,10 @@ def get_all_job_worker_id(request, worker_id):
             serialized_job.update({"is_shortlisted": True})
         else:
             serialized_job.update({"is_shortlisted": False})
+        if job.id in favorite_job_ids:
+            serialized_job.update({"is_favorite": True})
+        else:
+            serialized_job.update({"is_favorite": False})
         send_data.append(serialized_job)
     content['status'] = 1
     content['message'] = 'Success'

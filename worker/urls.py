@@ -6,6 +6,7 @@ urlpatterns = [
     path('job/apply/', worker_apply_job),
     path('applied/job/<int:worker_id>/', worker_applied_job),
     path('job/shortlist/', worker_shortlist_job),
+    path('job/favorite/', worker_make_job_favorite),
     path('shortlist/job/<int:worker_id>/', worker_shortlisted_job),
     path('set/experiences/', set_worker_experiences),
     path('upload/resume/', upload_worker_resume),
