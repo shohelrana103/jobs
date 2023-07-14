@@ -51,6 +51,50 @@ def get_job_by_category(request, category_id):
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
 # @permission_classes((IsAuthenticated,))
+def get_job_by_category_worker(request, category_id, worker_id):
+    content = {
+        'status': 0
+    }
+    try:
+        job_category = JobCategory.objects.get(pk=category_id)
+    except:
+        content['message'] = 'Job Category Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        worker = Worker.objects.get(pk=worker_id)
+    except:
+        content['message'] = 'Worker not found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    jobs = Job.objects.filter(job_category=job_category)
+    send_data = []
+    for job in jobs:
+        serialized_job = JobSerializer(job, context={'request': request}).data
+        if job.id in applied_job_ids:
+            serialized_job.update({"is_applied": True})
+        else:
+            serialized_job.update({"is_applied": False})
+        if job.id in shortlisted_job_ids:
+            serialized_job.update({"is_shortlisted": True})
+        else:
+            serialized_job.update({"is_shortlisted": False})
+        if job.id in favorite_job_ids:
+            serialized_job.update({"is_favorite": True})
+        else:
+            serialized_job.update({"is_favorite": False})
+        send_data.append(serialized_job)
+    # serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['jobs'] = send_data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
 def get_job_detail(request, job_id):
     content = {
         'status': 0
