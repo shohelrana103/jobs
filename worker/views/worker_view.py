@@ -181,6 +181,28 @@ def worker_shortlisted_job(request, worker_id):
     return JsonResponse(content, status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def get_worker_favorite_job(request, worker_id):
+    content = {
+        'status': 0
+    }
+
+    try:
+        worker = Worker.objects.get(pk=worker_id)
+    except:
+        content['message'] = 'Worker Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    favorite_jobs = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    jobs = Job.objects.filter(pk__in=favorite_jobs)
+    serialized_applied_job = JobSerializer(jobs, many=True)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['data'] = serialized_applied_job.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
 @permission_classes((IsAuthenticated,))
