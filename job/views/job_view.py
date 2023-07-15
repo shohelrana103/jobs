@@ -114,6 +114,49 @@ def get_job_detail(request, job_id):
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
 # @permission_classes((IsAuthenticated,))
+def get_job_detail_with_worker_id(request, job_id, worker_id):
+    content = {
+        'status': 0
+    }
+    try:
+        job = Job.objects.get(pk=job_id)
+    except:
+        content['message'] = 'Job Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        worker = Worker.objects.get(pk=worker_id)
+    except:
+        content['message'] = 'Worker not found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+    serialized_job = JobDetailsSerializer(job, context={'request': request}).data
+
+    try:
+        get_applied = JobApplication.objects.get(worker_id=worker, job_id=job, is_active=True)
+        serialized_job.update({"is_applied": True})
+    except:
+        serialized_job.update({"is_applied": False})
+
+    try:
+        get_shortlisted = WorkerShortListedJob.objects.get(worker_id=worker, job_id=job, is_active=True)
+        serialized_job.update({"is_shortlisted": True})
+    except:
+        serialized_job.update({"is_shortlisted": False})
+
+    try:
+        get_favorite = WorkerFavoriteJob.objects.get(worker_id=worker, job_id=job, is_active=True)
+        serialized_job.update({"is_favorite": True})
+    except:
+        serialized_job.update({"is_favorite": False})
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['job_details'] = serialized_job
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
 def get_job_by_industry(request, industry_id):
     content = {
         'status': 0
