@@ -68,11 +68,12 @@ class JobSerializer(serializers.ModelSerializer):
     job_area = serializers.CharField(source='area.area_name', read_only=True)
     company_logo = serializers.SerializerMethodField()
     company_website = serializers.CharField(source='company.company_website', read_only=True)
+    about_company = serializers.CharField(source='company.about_company', read_only=True)
 
     class Meta:
         model = Job
         fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
-                  'application_deadline', 'salary_range', 'company_logo', 'company_website')
+                  'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
@@ -102,6 +103,7 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     cv_receiving_option = ResumeReceivingOptionStatusSerializer(many=True)
     company_logo = serializers.SerializerMethodField()
     company_website = serializers.CharField(source='company.company_website', read_only=True)
+    about_company = serializers.CharField(source='company.about_company', read_only=True)
 
     class Meta:
         model = Job
