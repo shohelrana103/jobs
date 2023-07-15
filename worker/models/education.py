@@ -9,6 +9,7 @@ class EducationHistory(models.Model):
     institute = models.CharField(max_length=255)
     passing_year = models.DateField(null=True, blank=True)
     is_currently_reading = models.BooleanField(default=False)
+    result = models.CharField(max_length=100, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -24,4 +25,4 @@ class EducationHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EducationHistory
-        fields = ('id', 'degree_name', 'institute', 'passing_year', 'is_currently_reading')
+        fields = ('id', 'degree_name', 'institute', 'passing_year', 'is_currently_reading', 'result')

@@ -24,6 +24,8 @@ class Company(models.Model):
     contact_person_mobile = models.CharField(max_length=255, null=True, blank=True)
     contact_person_email = models.CharField(max_length=255, null=True, blank=True)
     company_logo = models.FileField(upload_to='worker/images', null=True, blank=True)
+    company_website = models.TextField(null=True, blank=True)
+    company_size = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     updated_by = models.CharField(max_length=255, null=True, blank=True)
@@ -51,7 +53,7 @@ class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ('id', 'industry', 'company_name', 'company_logo', 'company_contact_number', 'country',
-                  'state', 'city', 'area')
+                  'state', 'city', 'area', 'company_website', 'company_size')
 
     def get_company_logo(self, company):
         if company.company_logo:

@@ -125,6 +125,12 @@ def company_profile_update(request):
         company.contact_person_position = contact_person_position
         company.contact_person_mobile = contact_person_mobile
         company.contact_person_email = contact_person_email
+        if 'company_website' in request.data:
+            company_website = request.data['company_website']
+            company.company_website = company_website
+        if 'company_size' in request.data:
+            company_size = request.data['company_size']
+            company.company_size = company_size
         company.save()
         content['status'] = 1
         content['message'] = "Update successful"

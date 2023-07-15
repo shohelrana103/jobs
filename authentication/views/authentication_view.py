@@ -308,9 +308,14 @@ def worker_set_education(request):
                 passing_year = degree['passing_year']
             else:
                 passing_year = None
+            if degree['result']:
+                result = degree['result']
+            else:
+                result = None
             education_obj = EducationHistory.objects.create(degree=degree_obj, institute=degree['institute'],
                                                             passing_year=passing_year,
-                                                            is_currently_reading=bool(degree['is_currently_reading']))
+                                                            is_currently_reading=bool(degree['is_currently_reading']),
+                                                            result=result)
             education_list.append(education_obj)
         worker.educations.add(*education_list)
         worker.save()
