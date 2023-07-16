@@ -210,9 +210,9 @@ def get_worker_favorite_job(request, worker_id):
         content['message'] = 'Worker Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
 
-    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
-    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=favorite_job_ids)
     send_data = []
     for job in jobs:
@@ -331,7 +331,7 @@ def upload_worker_video_resume(request):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-# @permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def upload_worker_profile_picture(request):
     content = {
         'status': 0
