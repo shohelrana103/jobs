@@ -65,9 +65,9 @@ def get_job_by_category_worker(request, category_id, worker_id):
     except:
         content['message'] = 'Worker not found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
-    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
+    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     jobs = Job.objects.filter(job_category=job_category)
     send_data = []
     for job in jobs:
