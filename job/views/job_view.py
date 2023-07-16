@@ -132,7 +132,7 @@ def get_job_detail_with_worker_id(request, job_id, worker_id):
     serialized_job = JobDetailsSerializer(job, context={'request': request}).data
 
     try:
-        get_applied = JobApplication.objects.get(worker_id=worker, job_id=job, is_active=True)
+        get_applied = JobApplication.objects.get(worker_id=worker, job_id=job)
         serialized_job.update({"is_applied": True})
     except:
         serialized_job.update({"is_applied": False})
