@@ -302,7 +302,7 @@ def upload_worker_resume(request):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-# @permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def upload_worker_video_resume(request):
     content = {
         'status': 0
@@ -323,6 +323,35 @@ def upload_worker_video_resume(request):
             return JsonResponse(content, status=status.HTTP_200_OK)
         content['status'] = 1
         content['message'] = 'Video Added Successful'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def upload_worker_profile_picture(request):
+    content = {
+        'status': 0
+    }
+    if 'worker_id' in request.data and 'profile_picture' in request.data:
+        worker_id = request.data['worker_id']
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+        except:
+            content['message'] = 'Worker Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        profile_picture = request.FILES.get('profile_picture', False)
+        if profile_picture is not False:
+            worker.photo = profile_picture
+            worker.save()
+        else:
+            content['message'] = 'Require File'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        content['status'] = 1
+        content['message'] = 'Successful'
         return JsonResponse(content, status=status.HTTP_200_OK)
     else:
         content['message'] = 'Parameter Missing!'
