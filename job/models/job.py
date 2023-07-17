@@ -73,7 +73,7 @@ class JobSerializer(serializers.ModelSerializer):
     class Meta:
         model = Job
         fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
-                  'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company')
+                  'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company', 'salary_type')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
