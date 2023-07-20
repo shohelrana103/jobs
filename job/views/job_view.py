@@ -230,7 +230,7 @@ def get_all_job_worker_id(request, worker_id):
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def search_jobs(request):
     content = {
         'status': 0
@@ -284,7 +284,7 @@ def search_jobs(request):
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def get_job_statistic(request):
     content = {
         'status': 0
