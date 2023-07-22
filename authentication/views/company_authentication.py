@@ -42,8 +42,8 @@ def company_signup(request):
                                                   token=token.key,
                                                   password=make_password(password),
                                                   user_type=1)
-        # create worker
-        company = Company.objects.create(company_name=company_name)
+        # create company
+        company = Company.objects.create(company_name=company_name, company_email=email)
         auth_user.user_id = company.id
         auth_user.save()
 

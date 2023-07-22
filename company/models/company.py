@@ -12,6 +12,7 @@ class Company(models.Model):
     company_name = models.CharField(max_length=255)
     industry = models.ForeignKey(Industry, on_delete=models.CASCADE, null=True, blank=True)
     company_contact_number = models.CharField(max_length=50, null=True, blank=True)
+    company_email = models.CharField(max_length=50, null=True, blank=True)
     company_address_line_1 = models.TextField(null=True, blank=True)
     company_address_line_2 = models.TextField(null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
@@ -54,7 +55,8 @@ class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ('id', 'industry', 'company_name', 'company_logo', 'company_contact_number', 'country',
-                  'state', 'city', 'area', 'company_website', 'company_size')
+                  'state', 'city', 'area', 'company_website', 'company_size', 'country_id', 'state_id',
+                  'city_id', 'area_id', 'industry_id')
 
     def get_company_logo(self, company):
         if company.company_logo:

@@ -92,12 +92,28 @@ def worker_applied_job(request, worker_id):
     except:
         content['message'] = 'Worker Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
+    shortlisted_job_ids = list(
+        WorkerShortListedJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
+    favorite_job_ids = list(
+        WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     applied_jobs = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=applied_jobs)
-    serialized_applied_job = JobSerializer(jobs, many=True, context={'request': request})
+    send_data = []
+    for job in jobs:
+        serialized_job = JobSerializer(job, context={'request': request}).data
+        serialized_job.update({"is_applied": True})
+        if job.id in shortlisted_job_ids:
+            serialized_job.update({"is_shortlisted": True})
+        else:
+            serialized_job.update({"is_shortlisted": False})
+        if job.id in favorite_job_ids:
+            serialized_job.update({"is_favorite": True})
+        else:
+            serialized_job.update({"is_favorite": False})
+        send_data.append(serialized_job)
     content['status'] = 1
     content['message'] = 'Success'
-    content['data'] = serialized_applied_job.data
+    content['data'] = send_data
     return JsonResponse(content, status=status.HTTP_200_OK)
 
 

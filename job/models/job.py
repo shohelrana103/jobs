@@ -32,6 +32,7 @@ class Job(models.Model):
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     job_category = models.ForeignKey(JobCategory, on_delete=models.CASCADE)
     job_title = models.CharField(max_length=255)
+    job_description = models.TextField(null=True, blank=True)
     no_of_vacancies = models.IntegerField()
     job_level = models.ForeignKey(JobLevel, on_delete=models.CASCADE)
     employment_status = models.ForeignKey(EmploymentStatus, on_delete=models.CASCADE)
@@ -76,13 +77,14 @@ class JobSerializer(serializers.ModelSerializer):
     company_logo = serializers.SerializerMethodField()
     company_website = serializers.CharField(source='company.company_website', read_only=True)
     about_company = serializers.CharField(source='company.about_company', read_only=True)
+    company_email = serializers.CharField(source='company.company_email', read_only=True)
+    company_phone = serializers.CharField(source='company.company_contact_number', read_only=True)
 
     class Meta:
         model = Job
-        fields = (
-        'id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city',
-        'job_area',
-        'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company')
+        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
+                  'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
+                  'salary_type', 'job_description', 'company_email', 'company_phone')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
@@ -113,6 +115,8 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     company_logo = serializers.SerializerMethodField()
     company_website = serializers.CharField(source='company.company_website', read_only=True)
     about_company = serializers.CharField(source='company.about_company', read_only=True)
+    company_email = serializers.CharField(source='company.company_email', read_only=True)
+    company_phone = serializers.CharField(source='company.company_contact_number', read_only=True)
 
     class Meta:
         model = Job

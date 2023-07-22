@@ -312,11 +312,22 @@ def worker_set_education(request):
                 result = degree['result']
             else:
                 result = None
-            education_obj = EducationHistory.objects.create(degree=degree_obj, institute=degree['institute'],
-                                                            passing_year=passing_year,
-                                                            is_currently_reading=bool(degree['is_currently_reading']),
-                                                            result=result)
-            education_list.append(education_obj)
+            try:
+                education_obj = worker.educations.get(degree=degree_obj)
+                # education_obj = EducationHistory.objects.get(degree=degree_obj)
+                education_obj.institute = degree['institute']
+                education_obj.passing_year = passing_year
+                education_obj.is_currently_reading = bool(degree['is_currently_reading'])
+                education_obj.result = result
+                education_obj.save()
+                print(education_obj.result)
+            except Exception as e:
+                education_obj = EducationHistory.objects.create(degree=degree_obj, institute=degree['institute'],
+                                                                passing_year=passing_year,
+                                                                is_currently_reading=bool(
+                                                                    degree['is_currently_reading']),
+                                                                result=result)
+                education_list.append(education_obj)
         worker.educations.add(*education_list)
         worker.save()
         content['status'] = 1
