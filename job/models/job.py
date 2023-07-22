@@ -18,6 +18,12 @@ from common.models.city import City
 from company.models.industry import Industry
 from ..models.job_placement import JobPlacement
 
+JOB_STATUS = (
+    ('1', 'Draft'),
+    ('2', 'Active'),
+    ('2', 'Deactivate'),
+)
+
 
 class Job(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -53,6 +59,7 @@ class Job(models.Model):
     job_placement = models.ForeignKey(JobPlacement, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    job_status = models.CharField(max_length=100, choices=JOB_STATUS, default=1)
 
     def __str__(self):
         return self.job_title
@@ -72,8 +79,10 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
-                  'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company')
+        fields = (
+        'id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city',
+        'job_area',
+        'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:

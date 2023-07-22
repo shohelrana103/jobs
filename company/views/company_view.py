@@ -15,6 +15,7 @@ from common.models.area import Area
 from worker.models.job_application import JobApplication
 from job.models.job import Job, JobSerializer
 from worker.models.worker import Worker, WorkerSerializer
+from datetime import datetime
 
 
 class CompanyView(APIView):
@@ -240,10 +241,37 @@ def get_shortlisted_candidate(request, company_id, job_id):
         content['message'] = 'Job Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
     worker_ids = list(
-        JobApplication.objects.filter(job_id=job, job_id__company=company, is_short_listed=True).values_list('worker_id', flat=True))
+        JobApplication.objects.filter(job_id=job, job_id__company=company, is_short_listed=True).values_list(
+            'worker_id', flat=True))
     workers = Worker.objects.filter(pk__in=worker_ids)
     serialized_jobs = WorkerSerializer(workers, many=True)
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_jobs.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def company_get_job_statistic(request, company_id):
+    content = {
+        'status': 0
+    }
+    try:
+        company = Company.objects.get(pk=company_id)
+    except:
+        content['message'] = 'Company Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    posted_jobs = Job.objects.filter(company=company)
+    total_jobs = posted_jobs.count()
+    running_jobs = posted_jobs.filter(application_deadline__gte=datetime.now()).count()
+    expired_jobs = posted_jobs.filter(application_deadline__lt=datetime.now()).count()
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['data'] = {
+        "total_jobs": total_jobs,
+        "running_jobs": running_jobs,
+        "expired_jobs": expired_jobs
+    }
     return JsonResponse(content, status=status.HTTP_200_OK)

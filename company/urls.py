@@ -10,4 +10,5 @@ urlpatterns = [
     path('job/applied/candidate/<int:company_id>/<int:job_id>/', get_applied_candidate),
     path('candidate/shortlist/', company_make_candidate_shortlist),
     path('get/shortlisted/candidate/<int:company_id>/<int:job_id>/', get_shortlisted_candidate),
+    path('job/statistic/<int:company_id>/', company_get_job_statistic),
 ]
