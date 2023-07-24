@@ -153,7 +153,15 @@ def get_all_job_by_company(request, company_id):
     except:
         content['message'] = 'Company Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
+    query_params = request.query_params
     company_jobs = Job.objects.filter(company=company)
+    if "status" in query_params:
+        req_status = query_params['status']
+        if req_status == 'old':
+            company_jobs = company_jobs.filter(application_deadline__lt=datetime.now())
+        if req_status == 'recent':
+            company_jobs = company_jobs.filter(application_deadline__gte=datetime.now())
+        print(req_status)
     serialized_jobs = JobSerializer(company_jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
