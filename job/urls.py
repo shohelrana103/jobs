@@ -17,6 +17,7 @@ urlpatterns = [
     path('benefits/', get_job_benefits),
     path('cv/receiving/option/', get_job_cv_receiving_options),
     path('create/basic/', create_job_basic_information),
+    path('update/basic/', edit_job_basic_information),
     path('create/requirements/', create_job_requirements),
     path('create/address/', create_job_address),
     path('skills/', get_job_skills),

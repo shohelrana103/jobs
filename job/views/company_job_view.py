@@ -220,12 +220,83 @@ def create_job_basic_information(request):
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
 @permission_classes((IsAuthenticated,))
+def edit_job_basic_information(request):
+    content = {
+        'status': 0
+    }
+    if all(k in request.data for k in ("job_id", "job_title", "job_type_id", "job_category_id",
+                                       "job_level_id", "employment_status_id", "work_place_id",
+                                       "salary_range", "no_of_vacancies", "job_responsibility",
+                                       "application_deadline")):
+        job_id = request.data['job_id']
+        job_title = request.data['job_title']
+        job_category_id = request.data['job_category_id']
+        job_type_id = request.data['job_type_id']
+        job_level_id = request.data['job_level_id']
+        employment_status_id = request.data['employment_status_id']
+        work_place_id = request.data['work_place_id']
+        salary_range = request.data['salary_range']
+        job_responsibility = request.data['job_responsibility']
+        application_deadline = request.data['application_deadline']
+        no_of_vacancies = request.data['no_of_vacancies']
+        try:
+            job = Company.objects.get(pk=job_id)
+        except:
+            content['message'] = "Company Not Found"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            job_category = JobCategory.objects.get(pk=job_category_id)
+        except:
+            content['message'] = "Job Category Not Found"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            job_level = JobLevel.objects.get(pk=job_level_id)
+        except:
+            content['message'] = "Job Level Not Found"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            employment_status = EmploymentStatus.objects.get(pk=employment_status_id)
+        except:
+            content['message'] = "Employment Status Not Found"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            work_place = WorkPlace.objects.get(pk=work_place_id)
+        except:
+            content['message'] = "Work Place Not Found"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            job_type = JobType.objects.get(pk=job_type_id)
+        except:
+            content['message'] = "Job Type Not Found"
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        job.job_type = job_type
+        job.job_category = job_category
+        job.job_title = job_title
+        job.job_level = job_level
+        job.employment_status = employment_status
+        job.salary_range = salary_range
+        job.work_place = work_place
+        job.no_of_vacancies = no_of_vacancies
+        job.application_deadline = application_deadline
+        job.job_responsibilities = job_responsibility
+        job.save()
+        content['status'] = 1
+        content['message'] = 'Update Success'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
 def create_job_requirements(request):
     content = {
         'status': 0
     }
     if all(k in request.data for k in ("job_id", "minimum_age", "maximum_age", "degree_id",
-                                       "skills_ids", "gender_ids", "cv_receiving_ids","benefit_ids",
+                                       "skills_ids", "gender_ids", "cv_receiving_ids", "benefit_ids",
                                        "require_experience")):
         job_id = request.data['job_id']
         minimum_age = request.data['minimum_age']

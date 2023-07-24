@@ -61,6 +61,7 @@ class WorkerDetailsSerializer(serializers.ModelSerializer):
     employment_history = EmploymentHistorySerializer(read_only=True, many=True)
     skill_set = SkillSerializer(read_only=True, many=True)
     photo = serializers.SerializerMethodField()
+    video_resume = serializers.SerializerMethodField()
 
     class Meta:
         model = Worker
@@ -70,5 +71,12 @@ class WorkerDetailsSerializer(serializers.ModelSerializer):
         if worker.photo:
             request = self.context.get('request')
             return str(request.build_absolute_uri(worker.photo.url))
+        else:
+            return None
+
+    def get_video_resume(self, worker):
+        if worker.video_resume:
+            request = self.context.get('request')
+            return str(request.build_absolute_uri(worker.video_resume.url))
         else:
             return None

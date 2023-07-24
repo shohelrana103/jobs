@@ -14,7 +14,7 @@ from common.models.city import City
 from common.models.area import Area
 from worker.models.job_application import JobApplication
 from job.models.job import Job, JobSerializer
-from worker.models.worker import Worker, WorkerSerializer
+from worker.models.worker import Worker, WorkerSerializer, WorkerDetailsSerializer
 from datetime import datetime
 
 
@@ -181,7 +181,7 @@ def get_applied_candidate(request, company_id, job_id):
     worker_ids = list(
         JobApplication.objects.filter(job_id=job, job_id__company=company).values_list('worker_id', flat=True))
     workers = Worker.objects.filter(pk__in=worker_ids)
-    serialized_jobs = WorkerSerializer(workers, many=True)
+    serialized_jobs = WorkerDetailsSerializer(workers, many=True)
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_jobs.data
@@ -275,3 +275,63 @@ def company_get_job_statistic(request, company_id):
         "expired_jobs": expired_jobs
     }
     return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def company_re_post_job(request):
+    content = {
+        'status': 0
+    }
+    if 'company_id' in request.data and 'job_id' in request.data and 'application_deadline' in request.data:
+        company_id = request.data['company_id']
+        job_id = request.data['job_id']
+        application_deadline = request.data['application_deadline']
+        try:
+            company = Company.objects.get(pk=company_id)
+        except:
+            content['message'] = 'Company Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            company_job = Job.objects.get(pk=job_id)
+            company_job.application_deadline = application_deadline
+            company_job.save()
+            content['status'] = 1
+            content['message'] = 'Job Repost Successful'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        except:
+            content['message'] = 'Something wrong'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Require parameter missing'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def upload_company_logo(request):
+    content = {
+        'status': 0
+    }
+    if 'company_id' in request.data and 'logo' in request.data:
+        company_id = request.data['company_id']
+        try:
+            company = Company.objects.get(pk=company_id)
+        except:
+            content['message'] = 'Company Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        logo = request.FILES.get('logo', False)
+        if logo is not False:
+            company.company_logo = logo
+            company.save()
+        else:
+            content['message'] = 'Require File'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        content['status'] = 1
+        content['message'] = 'Successful'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
