@@ -153,51 +153,51 @@ def create_job_basic_information(request):
     if 'user_id' in request.data:
         user_id = request.data['user_id']
     else:
-        error_message['userId'] = ["This field is request"]
+        error_message['userId'] = ["This field is required"]
     if 'job_title' in request.data:
         job_title = request.data['job_title']
     else:
-        error_message['jobTitle'] = ["This field is request"]
+        error_message['jobTitle'] = ["This field is required"]
     if 'job_type_id' in request.data:
         job_type_id = request.data['job_type_id']
     else:
-        error_message['jobType'] = ["This field is request"]
+        error_message['jobType'] = ["This field is required"]
     if 'job_category_id' in request.data:
         job_category_id = request.data['job_category_id']
     else:
-        error_message['jobCategory'] = ["This field is request"]
+        error_message['jobCategory'] = ["This field is required"]
     if 'job_level_id' in request.data:
         job_level_id = request.data['job_level_id']
     else:
-        error_message['jobLevel'] = ["This field is request"]
+        error_message['jobLevel'] = ["This field is required"]
     if 'job_level_id' in request.data:
         job_level_id = request.data['job_level_id']
     else:
-        error_message['jobLevel'] = ["This field is request"]
+        error_message['jobLevel'] = ["This field is required"]
     if 'employment_status_id' in request.data:
         employment_status_id = request.data['employment_status_id']
     else:
-        error_message['employmentStatus'] = ["This field is request"]
+        error_message['employmentStatus'] = ["This field is required"]
     if 'work_place_id' in request.data:
         work_place_id = request.data['work_place_id']
     else:
-        error_message['workPlace'] = ["This field is request"]
+        error_message['workPlace'] = ["This field is required"]
     if 'salary_range' in request.data:
         salary_range = request.data['salary_range']
     else:
-        error_message['salaryRange'] = ["This field is request"]
+        error_message['salaryRange'] = ["This field is required"]
     if 'no_of_vacancies' in request.data:
         no_of_vacancies = request.data['no_of_vacancies']
     else:
-        error_message['noOfVacancies'] = ["This field is request"]
+        error_message['noOfVacancies'] = ["This field is required"]
     if 'job_responsibility' in request.data:
         job_responsibility = request.data['job_responsibility']
     else:
-        error_message['jobResponsibilities'] = ["This field is request"]
+        error_message['jobResponsibilities'] = ["This field is required"]
     if 'application_deadline' in request.data:
         application_deadline = request.data['application_deadline']
     else:
-        error_message['applicationDeadline'] = ["This field is request"]
+        error_message['applicationDeadline'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -296,51 +296,51 @@ def edit_job_basic_information(request):
     if 'job_id' in request.data:
         job_id = request.data['job_id']
     else:
-        error_message['jobId'] = ["This field is request"]
+        error_message['jobId'] = ["This field is required"]
     if 'job_title' in request.data:
         job_title = request.data['job_title']
     else:
-        error_message['jobTitle'] = ["This field is request"]
+        error_message['jobTitle'] = ["This field is required"]
     if 'job_type_id' in request.data:
         job_type_id = request.data['job_type_id']
     else:
-        error_message['jobType'] = ["This field is request"]
+        error_message['jobType'] = ["This field is required"]
     if 'job_category_id' in request.data:
         job_category_id = request.data['job_category_id']
     else:
-        error_message['jobCategory'] = ["This field is request"]
+        error_message['jobCategory'] = ["This field is required"]
     if 'job_level_id' in request.data:
         job_level_id = request.data['job_level_id']
     else:
-        error_message['jobLevel'] = ["This field is request"]
+        error_message['jobLevel'] = ["This field is required"]
     if 'job_level_id' in request.data:
         job_level_id = request.data['job_level_id']
     else:
-        error_message['jobLevel'] = ["This field is request"]
+        error_message['jobLevel'] = ["This field is required"]
     if 'employment_status_id' in request.data:
         employment_status_id = request.data['employment_status_id']
     else:
-        error_message['employmentStatus'] = ["This field is request"]
+        error_message['employmentStatus'] = ["This field is required"]
     if 'work_place_id' in request.data:
         work_place_id = request.data['work_place_id']
     else:
-        error_message['workPlace'] = ["This field is request"]
+        error_message['workPlace'] = ["This field is required"]
     if 'salary_range' in request.data:
         salary_range = request.data['salary_range']
     else:
-        error_message['salaryRange'] = ["This field is request"]
+        error_message['salaryRange'] = ["This field is required"]
     if 'no_of_vacancies' in request.data:
         no_of_vacancies = request.data['no_of_vacancies']
     else:
-        error_message['noOfVacancies'] = ["This field is request"]
+        error_message['noOfVacancies'] = ["This field is required"]
     if 'job_responsibility' in request.data:
         job_responsibility = request.data['job_responsibility']
     else:
-        error_message['jobResponsibilities'] = ["This field is request"]
+        error_message['jobResponsibilities'] = ["This field is required"]
     if 'application_deadline' in request.data:
         application_deadline = request.data['application_deadline']
     else:
-        error_message['applicationDeadline'] = ["This field is request"]
+        error_message['applicationDeadline'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -405,39 +405,39 @@ def create_job_requirements(request):
     if 'job_id' in request.data:
         job_id = request.data['job_id']
     else:
-        error_message['jobId'] = ["This field is request"]
+        error_message['jobId'] = ["This field is required"]
     if 'minimum_age' in request.data:
         minimum_age = request.data['minimum_age']
     else:
-        error_message['minimumAge'] = ["This field is request"]
+        error_message['minimumAge'] = ["This field is required"]
     if 'maximum_age' in request.data:
         maximum_age = request.data['maximum_age']
     else:
-        error_message['maximumAge'] = ["This field is request"]
+        error_message['maximumAge'] = ["This field is required"]
     if 'degree_id' in request.data:
         degree_id = request.data['degree_id']
     else:
-        error_message['degree'] = ["This field is request"]
+        error_message['degree'] = ["This field is required"]
     if 'skills_ids' in request.data:
         skills_ids = request.data['skills_ids']
     else:
-        error_message['skillIds'] = ["This field is request"]
+        error_message['skillIds'] = ["This field is required"]
     if 'gender_ids' in request.data:
         gender_ids = request.data['gender_ids']
     else:
-        error_message['genderIds'] = ["This field is request"]
+        error_message['genderIds'] = ["This field is required"]
     if 'cv_receiving_ids' in request.data:
         cv_receiving_ids = request.data['cv_receiving_ids']
     else:
-        error_message['cvReceivingIds'] = ["This field is request"]
+        error_message['cvReceivingIds'] = ["This field is required"]
     if 'benefit_ids' in request.data:
         benefit_ids = request.data['benefit_ids']
     else:
-        error_message['benefitIds'] = ["This field is request"]
+        error_message['benefitIds'] = ["This field is required"]
     if 'require_experience' in request.data:
         require_experience = request.data['require_experience']
     else:
-        error_message['requireExperience'] = ["This field is request"]
+        error_message['requireExperience'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -499,23 +499,23 @@ def create_job_address(request):
     if 'job_id' in request.data:
         job_id = request.data['job_id']
     else:
-        error_message['jobId'] = ["This field is request"]
+        error_message['jobId'] = ["This field is required"]
     if 'country_id' in request.data:
         country_id = request.data['country_id']
     else:
-        error_message['countryId'] = ["This field is request"]
+        error_message['countryId'] = ["This field is required"]
     if 'state_id' in request.data:
         state_id = request.data['state_id']
     else:
-        error_message['stateId'] = ["This field is request"]
+        error_message['stateId'] = ["This field is required"]
     if 'city_id' in request.data:
         city_id = request.data['city_id']
     else:
-        error_message['cityId'] = ["This field is request"]
+        error_message['cityId'] = ["This field is required"]
     if 'area_id' in request.data:
         area_id = request.data['area_id']
     else:
-        error_message['areaId'] = ["This field is request"]
+        error_message['areaId'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
