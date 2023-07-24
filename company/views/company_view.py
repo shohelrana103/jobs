@@ -181,7 +181,7 @@ def get_applied_candidate(request, company_id, job_id):
     worker_ids = list(
         JobApplication.objects.filter(job_id=job, job_id__company=company).values_list('worker_id', flat=True))
     workers = Worker.objects.filter(pk__in=worker_ids)
-    serialized_jobs = WorkerDetailsSerializer(workers, many=True)
+    serialized_jobs = WorkerDetailsSerializer(workers, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_jobs.data
