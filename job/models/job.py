@@ -105,6 +105,7 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     job_level = serializers.CharField(source='job_level.option_name', read_only=True)
     job_level_id = serializers.IntegerField(source='job_level.id', read_only=True)
     employment_status = serializers.CharField(source='employment_status.status_name', read_only=True)
+    employment_status_id = serializers.IntegerField(source='employment_status.id', read_only=True)
     country = serializers.CharField(source='country.country_name', read_only=True)
     state = serializers.CharField(source='state.state_name', read_only=True)
     city = serializers.CharField(source='city.city_name', read_only=True)
