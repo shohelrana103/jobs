@@ -170,7 +170,7 @@ def get_all_job_by_company(request, company_id):
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def get_applied_candidate(request, company_id, job_id):
     content = {
         'status': 0
@@ -185,13 +185,23 @@ def get_applied_candidate(request, company_id, job_id):
     except:
         content['message'] = 'Job Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    worker_ids = list(
-        JobApplication.objects.filter(job_id=job, job_id__company=company).values_list('worker_id', flat=True))
+    # worker_ids = list(
+    #     JobApplication.objects.filter(job_id=job, job_id__company=company).values_list('worker_id', flat=True))
+    # workers = Worker.objects.filter(pk__in=worker_ids)
+    # serialized_jobs = WorkerDetailsSerializer(workers, many=True, context={'request': request})
+    applied_workers = JobApplication.objects.filter(job_id=job, job_id__company=company)
+    worker_ids = list(applied_workers.values_list('worker_id', flat=True))
     workers = Worker.objects.filter(pk__in=worker_ids)
-    serialized_jobs = WorkerDetailsSerializer(workers, many=True, context={'request': request})
+    send_data = []
+    for applied_worker in applied_workers:
+        worker = workers.get(pk=applied_worker.worker_id.id)
+        serialized_worker = WorkerDetailsSerializer(worker, context={'request': request})
+        short_list_status = {'is_shortlisted': applied_worker.is_short_listed}
+        short_list_status.update(serialized_worker.data)
+        send_data.append(short_list_status)
     content['status'] = 1
     content['message'] = 'Success'
-    content['data'] = serialized_jobs.data
+    content['data'] = send_data
     return JsonResponse(content, status=status.HTTP_200_OK)
 
 
