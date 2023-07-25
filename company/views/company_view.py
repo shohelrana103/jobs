@@ -170,7 +170,7 @@ def get_all_job_by_company(request, company_id):
 
 @api_view(['GET'])
 @authentication_classes((TokenAuthentication,))
-# @permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def get_applied_candidate(request, company_id, job_id):
     content = {
         'status': 0
