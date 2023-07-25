@@ -21,7 +21,8 @@ from ..models.job_placement import JobPlacement
 JOB_STATUS = (
     ('1', 'Draft'),
     ('2', 'Active'),
-    ('2', 'Deactivate'),
+    ('3', 'Deactivate'),
+    ('4', 'Deleted'),
 )
 
 
@@ -60,7 +61,7 @@ class Job(models.Model):
     job_placement = models.ForeignKey(JobPlacement, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
-    job_status = models.CharField(max_length=100, choices=JOB_STATUS, default=1)
+    job_status = models.CharField(max_length=100, choices=JOB_STATUS, default=2)
 
     def __str__(self):
         return self.job_title
@@ -111,6 +112,7 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     city = serializers.CharField(source='city.city_name', read_only=True)
     job_area = serializers.CharField(source='area.area_name', read_only=True)
     work_place = serializers.CharField(source='work_place.work_place', read_only=True)
+    work_place_id = serializers.IntegerField(source='work_place.id', read_only=True)
     benefits = JobBenefitSerializer(many=True)
     skills_requirements = SkillSerializer(many=True)
     gender_requirements = GenderSerializer(many=True)

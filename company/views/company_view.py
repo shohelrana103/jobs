@@ -154,14 +154,13 @@ def get_all_job_by_company(request, company_id):
         content['message'] = 'Company Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
     query_params = request.query_params
-    company_jobs = Job.objects.filter(company=company)
+    company_jobs = Job.objects.filter(company=company, job_status=2)
     if "status" in query_params:
         req_status = query_params['status']
         if req_status == 'old':
             company_jobs = company_jobs.filter(application_deadline__lt=datetime.now())
         if req_status == 'recent':
             company_jobs = company_jobs.filter(application_deadline__gte=datetime.now())
-        print(req_status)
     serialized_jobs = JobSerializer(company_jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
@@ -340,6 +339,36 @@ def upload_company_logo(request):
         content['status'] = 1
         content['message'] = 'Successful'
         return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def company_delete_job(request):
+    content = {
+        'status': 0
+    }
+    if 'company_id' in request.data and 'job_id' in request.data:
+        company_id = request.data['company_id']
+        job_id = request.data['job_id']
+        try:
+            company = Company.objects.get(pk=company_id)
+        except:
+            content['message'] = 'Company Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        try:
+            job = Job.objects.get(pk=job_id)
+            job.job_status = 4
+            job.save()
+            content['status'] = 1
+            content['message'] = 'Job Delete Successful'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        except:
+            content['message'] = 'Job Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
     else:
         content['message'] = 'Parameter Missing!'
         return JsonResponse(content, status=status.HTTP_200_OK)

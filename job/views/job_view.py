@@ -42,7 +42,7 @@ def get_job_by_category(request, category_id):
     except:
         content['message'] = 'Job Category Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    jobs = Job.objects.filter(job_category=job_category, application_deadline__gte=datetime.now())
+    jobs = Job.objects.filter(job_category=job_category, application_deadline__gte=datetime.now(), job_status=2)
     serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
@@ -70,7 +70,7 @@ def get_job_by_category_worker(request, category_id, worker_id):
     shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
-    jobs = Job.objects.filter(job_category=job_category, application_deadline__gte=datetime.now())
+    jobs = Job.objects.filter(job_category=job_category, application_deadline__gte=datetime.now(), job_status=2)
     send_data = []
     for job in jobs:
         serialized_job = JobSerializer(job, context={'request': request}).data
@@ -168,7 +168,7 @@ def get_job_by_industry(request, industry_id):
     except:
         content['message'] = 'Industry Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    jobs = Job.objects.filter(industry=industry, application_deadline__gte=datetime.now())
+    jobs = Job.objects.filter(industry=industry, application_deadline__gte=datetime.now(), job_status=2)
     serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
@@ -183,7 +183,7 @@ def get_all_job(request):
     content = {
         'status': 0
     }
-    jobs = Job.objects.filter(application_deadline__gte=datetime.now())
+    jobs = Job.objects.filter(application_deadline__gte=datetime.now(), job_status=2)
     serialized_jobs = JobSerializer(jobs, many=True, context={'request': request})
     content['status'] = 1
     content['message'] = 'Success'
@@ -206,7 +206,7 @@ def get_all_job_worker_id(request, worker_id):
     shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
     favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker).values_list('job_id', flat=True))
-    jobs = Job.objects.filter(application_deadline__gte=datetime.now())
+    jobs = Job.objects.filter(application_deadline__gte=datetime.now(), job_status=2)
     send_data = []
     for job in jobs:
         serialized_job = JobSerializer(job, context={'request': request}).data
@@ -236,7 +236,7 @@ def search_jobs(request):
     content = {
         'status': 0
     }
-    jobs = Job.objects.all()
+    jobs = Job.objects.filter(application_deadline__gte=datetime.now(), job_status=2)
     query_params = request.query_params
     if "keyword" in query_params:
         keyword = query_params['keyword']

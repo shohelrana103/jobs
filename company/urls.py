@@ -13,4 +13,5 @@ urlpatterns = [
     path('job/statistic/<int:company_id>/', company_get_job_statistic),
     path('repost/job/', company_re_post_job),
     path('upload/logo/', upload_company_logo),
+    path('delete/job/', company_delete_job),
 ]
