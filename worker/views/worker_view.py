@@ -71,6 +71,12 @@ def worker_apply_job(request):
             content['message'] = 'Worker Not Found'
             return JsonResponse(content, status=status.HTTP_200_OK)
         worker_job, is_create = JobApplication.objects.get_or_create(job_id=job, worker_id=worker)
+        # delete from shortlist after apply
+        try:
+            shortlist_job = WorkerShortListedJob.objects.get(job_id=job, worker_id=worker)
+            shortlist_job.delete()
+        except:
+            pass
         content['status'] = 1
         content['message'] = 'Application successful'
         return JsonResponse(content, status=status.HTTP_200_OK)
@@ -226,9 +232,11 @@ def get_worker_favorite_job(request, worker_id):
         content['message'] = 'Worker Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
 
-    shortlisted_job_ids = list(WorkerShortListedJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
+    shortlisted_job_ids = list(
+        WorkerShortListedJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     applied_job_ids = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
-    favorite_job_ids = list(WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
+    favorite_job_ids = list(
+        WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     jobs = Job.objects.filter(pk__in=favorite_job_ids)
     send_data = []
     for job in jobs:

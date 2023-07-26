@@ -69,76 +69,183 @@ def company_profile_update(request):
     content = {
         'status': 0
     }
-    if all(k in request.data for k in ("user_id", "industry_id", "address",
-                                       "country_id", "state_id", "city_id", "area_id", "zip_code",
-                                       "contact_person_name", "contact_person_position", "contact_person_mobile",
-                                       "contact_person_email")):
+    error_message = {}
+    if 'user_id' in request.data:
         user_id = request.data['user_id']
-        country_id = request.data['country_id']
-        state_id = request.data['state_id']
-        city_id = request.data['city_id']
-        area_id = request.data['area_id']
-        industry_id = request.data['industry_id']
-        address = request.data['address']
-        zip_code = request.data['zip_code']
-        contact_person_name = request.data['contact_person_name']
-        contact_person_mobile = request.data['contact_person_mobile']
-        contact_person_email = request.data['contact_person_email']
-        contact_person_position = request.data['contact_person_position']
-        try:
-            company = Company.objects.get(pk=user_id)
-        except:
-            content['message'] = 'Company Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
-        try:
-            country = Country.objects.get(pk=country_id)
-        except:
-            content['message'] = 'Country Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
-        try:
-            industry = Industry.objects.get(pk=industry_id)
-        except:
-            content['message'] = 'Industry Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
-        try:
-            state = State.objects.get(pk=state_id)
-        except:
-            content['message'] = 'State Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
-        try:
-            city = City.objects.get(pk=city_id)
-        except:
-            content['message'] = 'City Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
-        try:
-            area = Area.objects.get(pk=area_id)
-        except:
-            content['message'] = 'Area Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
-        company.industry = industry
-        company.country = country
-        company.state = state
-        company.city = city
-        company.area = area
-        company.contact_person_name = contact_person_name
-        company.company_address_line_1 = address
-        company.zip_code = zip_code
-        company.contact_person_position = contact_person_position
-        company.contact_person_mobile = contact_person_mobile
-        company.contact_person_email = contact_person_email
-        if 'company_website' in request.data:
-            company_website = request.data['company_website']
-            company.company_website = company_website
-        if 'company_size' in request.data:
-            company_size = request.data['company_size']
-            company.company_size = company_size
-        company.save()
-        content['status'] = 1
-        content['message'] = "Update successful"
-        return JsonResponse(content, status=status.HTTP_200_OK)
     else:
-        content['message'] = "Provide Require Parameters"
+        error_message['userId'] = ["This field is required"]
+    if 'industry_id' in request.data:
+        industry_id = request.data['industry_id']
+    else:
+        error_message['industryId'] = ["This field is required"]
+
+    if 'address' in request.data:
+        address = request.data['address']
+    else:
+        error_message['address'] = ["This field is required"]
+
+    if 'country_id' in request.data:
+        country_id = request.data['country_id']
+    else:
+        error_message['countryId'] = ["This field is required"]
+    if 'state_id' in request.data:
+        state_id = request.data['state_id']
+    else:
+        error_message['stateId'] = ["This field is required"]
+    if 'city_id' in request.data:
+        city_id = request.data['city_id']
+    else:
+        error_message['cityId'] = ["This field is required"]
+    if 'area_id' in request.data:
+        area_id = request.data['area_id']
+    else:
+        error_message['areaId'] = ["This field is required"]
+    if 'zip_code' in request.data:
+        zip_code = request.data['zip_code']
+    else:
+        error_message['zipCode'] = ["This field is required"]
+    if 'contact_person_name' in request.data:
+        contact_person_name = request.data['contact_person_name']
+    else:
+        error_message['contactPersonName'] = ["This field is required"]
+    if 'contact_person_position' in request.data:
+        contact_person_position = request.data['contact_person_position']
+    else:
+        error_message['contactPersonPosition'] = ["This field is required"]
+    if 'contact_person_mobile' in request.data:
+        contact_person_mobile = request.data['contact_person_mobile']
+    else:
+        error_message['contactPersonMobile'] = ["This field is required"]
+
+    if 'contact_person_email' in request.data:
+        contact_person_email = request.data['contact_person_email']
+    else:
+        error_message['contactPersonEmail'] = ["This field is required"]
+    if len(error_message) != 0:
+        content['message'] = 'Invalid data'
+        content['error'] = error_message
+        return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        company = Company.objects.get(pk=user_id)
+    except:
+        content['message'] = 'Company Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        country = Country.objects.get(pk=country_id)
+    except:
+        content['message'] = 'Country Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        industry = Industry.objects.get(pk=industry_id)
+    except:
+        content['message'] = 'Industry Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        state = State.objects.get(pk=state_id)
+    except:
+        content['message'] = 'State Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        city = City.objects.get(pk=city_id)
+    except:
+        content['message'] = 'City Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        area = Area.objects.get(pk=area_id)
+    except:
+        content['message'] = 'Area Not Found'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    company.industry = industry
+    company.country = country
+    company.state = state
+    company.city = city
+    company.area = area
+    company.contact_person_name = contact_person_name
+    company.company_address_line_1 = address
+    company.zip_code = zip_code
+    company.contact_person_position = contact_person_position
+    company.contact_person_mobile = contact_person_mobile
+    company.contact_person_email = contact_person_email
+    if 'company_website' in request.data:
+        company_website = request.data['company_website']
+        company.company_website = company_website
+    if 'company_size' in request.data:
+        company_size = request.data['company_size']
+        company.company_size = company_size
+    company.save()
+    content['status'] = 1
+    content['message'] = "Update successful"
+    return JsonResponse(content, status=status.HTTP_200_OK)
+    # if all(k in request.data for k in ("user_id", "industry_id", "address",
+    #                                    "country_id", "state_id", "city_id", "area_id", "zip_code",
+    #                                    "contact_person_name", "contact_person_position", "contact_person_mobile",
+    #                                    "contact_person_email")):
+    #     user_id = request.data['user_id']
+    #     country_id = request.data['country_id']
+    #     state_id = request.data['state_id']
+    #     city_id = request.data['city_id']
+    #     area_id = request.data['area_id']
+    #     industry_id = request.data['industry_id']
+    #     address = request.data['address']
+    #     zip_code = request.data['zip_code']
+    #     contact_person_name = request.data['contact_person_name']
+    #     contact_person_mobile = request.data['contact_person_mobile']
+    #     contact_person_email = request.data['contact_person_email']
+    #     contact_person_position = request.data['contact_person_position']
+    #     try:
+    #         company = Company.objects.get(pk=user_id)
+    #     except:
+    #         content['message'] = 'Company Not Found'
+    #         return JsonResponse(content, status=status.HTTP_200_OK)
+    #     try:
+    #         country = Country.objects.get(pk=country_id)
+    #     except:
+    #         content['message'] = 'Country Not Found'
+    #         return JsonResponse(content, status=status.HTTP_200_OK)
+    #     try:
+    #         industry = Industry.objects.get(pk=industry_id)
+    #     except:
+    #         content['message'] = 'Industry Not Found'
+    #         return JsonResponse(content, status=status.HTTP_200_OK)
+    #     try:
+    #         state = State.objects.get(pk=state_id)
+    #     except:
+    #         content['message'] = 'State Not Found'
+    #         return JsonResponse(content, status=status.HTTP_200_OK)
+    #     try:
+    #         city = City.objects.get(pk=city_id)
+    #     except:
+    #         content['message'] = 'City Not Found'
+    #         return JsonResponse(content, status=status.HTTP_200_OK)
+    #     try:
+    #         area = Area.objects.get(pk=area_id)
+    #     except:
+    #         content['message'] = 'Area Not Found'
+    #         return JsonResponse(content, status=status.HTTP_200_OK)
+    #     company.industry = industry
+    #     company.country = country
+    #     company.state = state
+    #     company.city = city
+    #     company.area = area
+    #     company.contact_person_name = contact_person_name
+    #     company.company_address_line_1 = address
+    #     company.zip_code = zip_code
+    #     company.contact_person_position = contact_person_position
+    #     company.contact_person_mobile = contact_person_mobile
+    #     company.contact_person_email = contact_person_email
+    #     if 'company_website' in request.data:
+    #         company_website = request.data['company_website']
+    #         company.company_website = company_website
+    #     if 'company_size' in request.data:
+    #         company_size = request.data['company_size']
+    #         company.company_size = company_size
+    #     company.save()
+    #     content['status'] = 1
+    #     content['message'] = "Update successful"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # else:
+    #     content['message'] = "Provide Require Parameters"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
