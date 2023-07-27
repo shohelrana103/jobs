@@ -198,6 +198,14 @@ def create_job_basic_information(request):
         application_deadline = request.data['application_deadline']
     else:
         error_message['applicationDeadline'] = ["This field is required"]
+    if 'job_description' in request.data:
+        job_description = request.data['job_description']
+    else:
+        error_message['jobDescription'] = ["This field is required"]
+    if 'salary_type' in request.data:
+        salary_type = request.data['salary_type']
+    else:
+        error_message['salaryType'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -259,7 +267,9 @@ def create_job_basic_information(request):
         work_place=work_place,
         no_of_vacancies=no_of_vacancies,
         application_deadline=application_deadline,
-        job_responsibilities=job_responsibility
+        job_responsibilities=job_responsibility,
+        job_description=job_description,
+        salary_type=salary_type
     )
     content['status'] = 1
     content['message'] = 'Success'
@@ -341,6 +351,15 @@ def edit_job_basic_information(request):
         application_deadline = request.data['application_deadline']
     else:
         error_message['applicationDeadline'] = ["This field is required"]
+
+    if 'job_description' in request.data:
+        job_description = request.data['job_description']
+    else:
+        error_message['jobDescription'] = ["This field is required"]
+    if 'salary_type' in request.data:
+        salary_type = request.data['salary_type']
+    else:
+        error_message['salaryType'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -385,6 +404,8 @@ def edit_job_basic_information(request):
     job.no_of_vacancies = no_of_vacancies
     job.application_deadline = application_deadline
     job.job_responsibilities = job_responsibility
+    job.job_description = job_description
+    job.salary_type = salary_type
     job.save()
     content['status'] = 1
     content['message'] = 'Update Success'
@@ -471,6 +492,9 @@ def create_job_requirements(request):
     if "certificate_course_requirements" in request.data:
         certificate_course_requirements = request.data['certificate_course_requirements']
         job.certificate_course_requirements = certificate_course_requirements
+    if "trade_course_requirements" in request.data:
+        trade_course_requirements = request.data['trade_course_requirements']
+        job.trade_course_requirements = trade_course_requirements
     job.save()
     skills = Skill.objects.filter(pk__in=skills_ids)
     cv_receiving_options = ResumeReceivingOption.objects.filter(pk__in=cv_receiving_ids)
