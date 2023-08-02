@@ -380,3 +380,27 @@ def upload_worker_profile_picture(request):
     else:
         content['message'] = 'Parameter Missing!'
         return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@authentication_classes((TokenAuthentication,))
+@permission_classes((IsAuthenticated,))
+def worker_delete_account(request):
+    content = {
+        'status': 0
+    }
+    if 'worker_id' in request.data:
+        worker_id = request.data['worker_id']
+        try:
+            worker = Worker.objects.get(pk=worker_id)
+        except:
+            content['message'] = 'Worker Not Found'
+            return JsonResponse(content, status=status.HTTP_200_OK)
+        worker.account_status = 3
+        worker.save()
+        content['status'] = 1
+        content['message'] = 'Successful'
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    else:
+        content['message'] = 'Parameter Missing!'
+        return JsonResponse(content, status=status.HTTP_200_OK)

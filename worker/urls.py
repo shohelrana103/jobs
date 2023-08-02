@@ -13,5 +13,6 @@ urlpatterns = [
     path('upload/resume/', upload_worker_resume),
     path('upload/video/resume/', upload_worker_video_resume),
     path('upload/profile/picture/', upload_worker_profile_picture),
+    path('delete/account/', worker_delete_account),
 
 ]

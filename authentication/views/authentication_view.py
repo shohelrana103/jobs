@@ -21,6 +21,8 @@ from worker.models.education import EducationHistory
 from worker.models.skill import Skill
 from django.conf import settings
 from django.core.mail import send_mail
+import os
+from twilio.rest import Client
 
 
 @api_view(['POST'])
@@ -34,23 +36,37 @@ def worker_send_otp(request):
         phone_number = request.data['phone_number']
         try:
             auth_user = Authentication.objects.get(user_phone=phone_number)
+            try:
+                worker_instance = Worker.objects.get(pk=auth_user.ser_id, account_status=1)
+            except:
+                content['message'] = 'Account is not Valid'
+                return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
         except Authentication.DoesNotExist:
             # creating user
-            user_instance, is_create = User.objects.get_or_create(phone_number)
+            user_instance, is_create = User.objects.get_or_create(username=phone_number)
             # creating token
             token, create = Token.objects.get_or_create(user=user_instance)
-            auth_user = Authentication.objects.create(user_phone=phone_number, token=token.key, user_type=2)
+            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key, user_type=2)
             # create worker
             worker, cr = Worker.objects.get_or_create(phone_number=phone_number)
             if cr:
                 auth_user.user_id = worker.id
                 auth_user.save()
         # write send otp code here
-        otp = random.randint(100000, 999999)
+        otp = random.randint(1000, 9999)
         UserOtp.objects.create(auth_user=auth_user,
                                otp=otp,
                                otp_send_time=datetime.now())
         # write otp send code here
+        account_sid = 'AC6389994ab6fc6526e8c68ba1d37d49ea'
+        auth_token = '594c12ef5cc482b9a628222a24f7cc8d'
+        client = Client(account_sid, auth_token)
+        message_body = 'Your OTP is ' + str(otp)
+        message = client.messages.create(
+            body=message_body,
+            from_='+14708023425',
+            to=phone_number
+        )
         content['status'] = 1
         content['message'] = 'OTP send successful'
 
@@ -108,6 +124,11 @@ def worker_send_otp_email(request):
         email = request.data['email']
         try:
             auth_user = Authentication.objects.get(email=email)
+            try:
+                worker_instance = Worker.objects.get(pk=auth_user.ser_id, account_status=1)
+            except:
+                content['message'] = 'Account is not Valid'
+                return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
         except Authentication.DoesNotExist:
             # creating user
             user_instance = User.objects.create_user(email)
@@ -120,7 +141,7 @@ def worker_send_otp_email(request):
                 auth_user.user_id = worker.id
                 auth_user.save()
         # write send otp code here
-        otp = random.randint(100000, 999999)
+        otp = random.randint(1000, 9999)
         UserOtp.objects.create(auth_user=auth_user,
                                otp=otp,
                                otp_send_time=datetime.now())

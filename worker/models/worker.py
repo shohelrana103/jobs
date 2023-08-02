@@ -9,6 +9,12 @@ from ..models.education import EducationHistory, EducationHistorySerializer
 from common.models.area import Area
 from common.models.gender import Gender
 
+ACCOUNT_STATUS = (
+    ('1', 'Active'),
+    ('2', 'Deactivate'),
+    ('3', 'Deleted')
+)
+
 
 class Worker(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -39,6 +45,8 @@ class Worker(models.Model):
     video_resume = models.FileField(upload_to='worker/video', null=True, blank=True)
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    account_status = models.CharField(max_length=100, choices=ACCOUNT_STATUS, default=1)
+
 
     # def __str__(self):
     #     return self.first_name
