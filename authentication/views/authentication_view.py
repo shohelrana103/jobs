@@ -59,16 +59,19 @@ def worker_send_otp(request):
                                otp_send_time=datetime.now())
         # write otp send code here
         account_sid = 'AC6389994ab6fc6526e8c68ba1d37d49ea'
-        auth_token = '594c12ef5cc482b9a628222a24f7cc8d'
+        auth_token = '4a83d9d7adae608a24624758e2287e27'
         client = Client(account_sid, auth_token)
         message_body = 'Your OTP is ' + str(otp)
-        message = client.messages.create(
-            body=message_body,
-            from_='+14708023425',
-            to=phone_number
-        )
-        content['status'] = 1
-        content['message'] = 'OTP send successful'
+        try:
+            message = client.messages.create(
+                body=message_body,
+                from_='+14708023425',
+                to=phone_number
+            )
+            content['status'] = 1
+            content['message'] = 'OTP send successful'
+        except Exception as e:
+            content['message'] = 'Something wrong'
 
     else:
         content['message'] = 'Require Parameter Missing'
