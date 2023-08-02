@@ -37,7 +37,7 @@ def worker_send_otp(request):
         try:
             auth_user = Authentication.objects.get(user_phone=phone_number)
             try:
-                worker_instance = Worker.objects.get(pk=auth_user.ser_id, account_status=1)
+                worker_instance = Worker.objects.get(pk=auth_user.user_id, account_status=1)
             except:
                 content['message'] = 'Account is not Valid'
                 return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
@@ -125,7 +125,7 @@ def worker_send_otp_email(request):
         try:
             auth_user = Authentication.objects.get(email=email)
             try:
-                worker_instance = Worker.objects.get(pk=auth_user.ser_id, account_status=1)
+                worker_instance = Worker.objects.get(pk=auth_user.user_id, account_status=1)
             except:
                 content['message'] = 'Account is not Valid'
                 return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
