@@ -53,7 +53,7 @@ def worker_send_otp(request):
                 auth_user.user_id = worker.id
                 auth_user.save()
         # write send otp code here
-        otp = random.randint(1000, 9999)
+        otp = random.randint(100000, 999999)
         UserOtp.objects.create(auth_user=auth_user,
                                otp=otp,
                                otp_send_time=datetime.now())
@@ -144,7 +144,7 @@ def worker_send_otp_email(request):
                 auth_user.user_id = worker.id
                 auth_user.save()
         # write send otp code here
-        otp = random.randint(1000, 9999)
+        otp = random.randint(100000, 999999)
         UserOtp.objects.create(auth_user=auth_user,
                                otp=otp,
                                otp_send_time=datetime.now())
