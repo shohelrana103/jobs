@@ -65,7 +65,9 @@ package-lock.json
 *.mp3
 db-data/
 jobportal/static/
-
+jobs/static/
+jobs/media/
+.env
 #api/public_api/migrations/
 #api/soapbox/migrations/
 #*/migrations/

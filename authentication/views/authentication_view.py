@@ -58,8 +58,8 @@ def worker_send_otp(request):
                                otp=otp,
                                otp_send_time=datetime.now())
         # write otp send code here
-        account_sid = 'AC6389994ab6fc6526e8c68ba1d37d49ea'
-        auth_token = '4a83d9d7adae608a24624758e2287e27'
+        account_sid = settings.TWILIO_ACCOUNT_SID
+        auth_token = settings.TWILIO_AUTH_TOKEN
         client = Client(account_sid, auth_token)
         message_body = 'Your OTP is ' + str(otp)
         try:
