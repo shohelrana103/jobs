@@ -46,7 +46,8 @@ def worker_send_otp(request):
             user_instance, is_create = User.objects.get_or_create(username=phone_number)
             # creating token
             token, create = Token.objects.get_or_create(user=user_instance)
-            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key, user_type=2)
+            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key,
+                                                      user_type=2)
             # create worker
             worker, cr = Worker.objects.get_or_create(phone_number=phone_number)
             if cr:
@@ -63,6 +64,11 @@ def worker_send_otp(request):
         client = Client(account_sid, auth_token)
         message_body = 'Your OTP is ' + str(otp)
         try:
+            # for testing
+            if phone_number == '+12345678910':
+                content['status'] = 1
+                content['message'] = 'OTP send successful'
+                return JsonResponse(content, status=status.HTTP_200_OK)
             message = client.messages.create(
                 body=message_body,
                 from_='+14708023425',
@@ -95,6 +101,9 @@ def worker_verify_otp(request):
             return JsonResponse(content, status=status.HTTP_200_OK)
         # write send otp code here
         user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
+        # for testing purpose
+        if phone_number == '+12345678910':
+            user_otp.otp = 123456
         if user_otp and user_otp.otp == otp:
             auth_serialized = AuthenticationSerializer(auth_user)
             # worker details
@@ -125,6 +134,11 @@ def worker_send_otp_email(request):
     }
     if 'email' in request.data:
         email = request.data['email']
+        # for testing
+        if email == 'worker@workersrus.com':
+            content['status'] = 1
+            content['message'] = 'OTP send successful'
+            return JsonResponse(content, status=status.HTTP_200_OK)
         try:
             auth_user = Authentication.objects.get(email=email)
             try:
@@ -188,6 +202,9 @@ def worker_verify_otp_email(request):
             return JsonResponse(content, status=status.HTTP_200_OK)
         # write send otp code here
         user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
+        # for testing purpose
+        if email == 'worker@workersrus.com':
+            user_otp.otp = 123456
         if user_otp and user_otp.otp == otp:
             auth_serialized = AuthenticationSerializer(auth_user)
             # worker details
@@ -606,7 +623,8 @@ def worker_signup(request):
             # user_instance, is_create = User.objects.get_or_create()
             # creating token
             token, create = Token.objects.get_or_create(user=user_instance)
-            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key, user_type=2)
+            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key,
+                                                      user_type=2)
             # create worker
             worker, cr = Worker.objects.get_or_create(phone_number=phone_number)
             if cr:
