@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
@@ -23,6 +24,10 @@ from django.conf import settings
 from django.core.mail import send_mail
 import os
 from twilio.rest import Client
+
+import clicksend_client
+from clicksend_client import SmsMessage
+from clicksend_client.rest import ApiException
 
 
 @api_view(['POST'])
@@ -58,27 +63,49 @@ def worker_send_otp(request):
         UserOtp.objects.create(auth_user=auth_user,
                                otp=otp,
                                otp_send_time=datetime.now())
-        # write otp send code here
-        account_sid = settings.TWILIO_ACCOUNT_SID
-        auth_token = settings.TWILIO_AUTH_TOKEN
-        client = Client(account_sid, auth_token)
+        # # write otp send code here
+        # Twilio code
+        # account_sid = settings.TWILIO_ACCOUNT_SID
+        # auth_token = settings.TWILIO_AUTH_TOKEN
+        # client = Client(account_sid, auth_token)
+        # message_body = 'Your OTP is ' + str(otp)
+        # try:
+        #     # for testing
+        #     if phone_number == '+12345678910':
+        #         content['status'] = 1
+        #         content['message'] = 'OTP send successful'
+        #         return JsonResponse(content, status=status.HTTP_200_OK)
+        #     message = client.messages.create(
+        #         body=message_body,
+        #         from_='+14708023425',
+        #         to=phone_number
+        #     )
+        # Configure HTTP basic authorization: BasicAuth
+        configuration = clicksend_client.Configuration()
+        configuration.username = settings.CLICKSEND_USERNAME
+        configuration.password = settings.CLICKSEND_APIKEY
+
+        # create an instance of the API class
+        api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
+
+        # If you want to explictly set from, add the key _from to the message.
         message_body = 'Your OTP is ' + str(otp)
+        sms_message = SmsMessage(source="php",
+                                 body=message_body,
+                                 to=phone_number)
+
+        sms_messages = clicksend_client.SmsMessageCollection(messages=[sms_message])
+
         try:
-            # for testing
-            if phone_number == '+12345678910':
-                content['status'] = 1
-                content['message'] = 'OTP send successful'
-                return JsonResponse(content, status=status.HTTP_200_OK)
-            message = client.messages.create(
-                body=message_body,
-                from_='+14708023425',
-                to=phone_number
-            )
-            content['status'] = 1
-            content['message'] = 'OTP send successful'
+            # Send sms message(s)
+            api_response = api_instance.sms_send_post(sms_messages)
+            # print(api_response)
+        except ApiException as e:
+            print("Exception when calling SMSApi->sms_send_post: %s\n" % e)
         except Exception as e:
             content['message'] = 'Something wrong'
-
+        content['status'] = 1
+        content['message'] = 'OTP send successful'
     else:
         content['message'] = 'Require Parameter Missing'
     return JsonResponse(content, status=status.HTTP_200_OK)

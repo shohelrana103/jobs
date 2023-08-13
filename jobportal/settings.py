@@ -161,3 +161,6 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 TWILIO_ACCOUNT_SID = os.getenv('twilio_account_sid')
 TWILIO_AUTH_TOKEN = os.getenv('twilio_auth_token')
+
+CLICKSEND_USERNAME = os.getenv('CLICKSEND_USERNAME')
+CLICKSEND_APIKEY = os.getenv('CLICKSEND_APIKEY')
