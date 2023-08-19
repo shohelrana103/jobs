@@ -232,7 +232,7 @@ def worker_verify_otp_email(request):
         # for testing purpose
         if email == 'worker@workersrus.com':
             user_otp.otp = 123456
-        if user_otp and user_otp.otp == otp:
+        if user_otp and user_otp.otp == int(otp):
             auth_serialized = AuthenticationSerializer(auth_user)
             # worker details
             worker = Worker.objects.get(pk=auth_user.user_id)
@@ -299,6 +299,10 @@ def worker_set_basic_information(request):
         worker.last_name = request.data['last_name']
     if 'email' in request.data:
         worker.email = request.data['email']
+    if 'linkedin_profile' in request.data:
+        worker.linkedin_profile = request.data['linkedin_profile']
+    if 'phone_number' in request.data:
+        worker.phone_number = request.data['phone_number']
     worker.save()
     content['status'] = 1
     content['message'] = 'Success'
