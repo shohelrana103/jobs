@@ -365,7 +365,7 @@ def edit_job_basic_information(request):
         content['error'] = error_message
         return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
     try:
-        job = Company.objects.get(pk=job_id)
+        job = Job.objects.get(pk=job_id)
     except:
         content['message'] = "Company Not Found"
         return JsonResponse(content, status=status.HTTP_200_OK)

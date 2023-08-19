@@ -229,7 +229,7 @@ def company_login(request):
     if 'email' in request.data and 'password' in request.data:
         email = request.data.get('email')
         password = request.data.get('password')
-        auth_user = Authentication.objects.filter(email__iexact=email)
+        auth_user = Authentication.objects.filter(email__iexact=email, user_type=1)
         if auth_user.count() == 1:
             auth_user = auth_user.first()
             if check_password(password, auth_user.password):
