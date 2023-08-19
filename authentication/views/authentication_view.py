@@ -89,7 +89,10 @@ def worker_send_otp(request):
         api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
 
         # If you want to explictly set from, add the key _from to the message.
-        message_body = 'Your OTP is ' + str(otp)
+        device_hash = ''
+        if 'device_hash' in request.data:
+            device_hash = request.data['device_hash']
+        message_body = 'Your OTP is: ' + str(otp) + "\n" + device_hash
         sms_message = SmsMessage(source="php",
                                  body=message_body,
                                  to=phone_number)
