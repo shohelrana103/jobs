@@ -501,7 +501,7 @@ def worker_set_education(request):
             degree_obj = Degree.objects.get(pk=degree['degree_id'])
         except:
             content['message'] = 'Degree Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
+            return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
         if degree['passing_year']:
             passing_year = degree['passing_year']
         else:

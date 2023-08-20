@@ -127,6 +127,8 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     about_company = serializers.CharField(source='company.about_company', read_only=True)
     company_email = serializers.CharField(source='company.company_email', read_only=True)
     company_phone = serializers.CharField(source='company.company_contact_number', read_only=True)
+    company_size = serializers.IntegerField(source='company.company_size', read_only=True)
+
 
     class Meta:
         model = Job
