@@ -132,7 +132,7 @@ def worker_verify_otp(request):
         # write send otp code here
         user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
         # for testing purpose
-        if phone_number == '+12345678910':
+        if phone_number == '+12345678910' or phone_number == '+8801752746973':
             user_otp.otp = 123456
         if user_otp and user_otp.otp == otp:
             auth_serialized = AuthenticationSerializer(auth_user)
@@ -233,7 +233,7 @@ def worker_verify_otp_email(request):
         # write send otp code here
         user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
         # for testing purpose
-        if email == 'worker@workersrus.com':
+        if email == 'worker@workersrus.com' or email == 'oahidzihad1@gmail.com':
             user_otp.otp = 123456
         if user_otp and user_otp.otp == int(otp):
             auth_serialized = AuthenticationSerializer(auth_user)
