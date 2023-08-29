@@ -13,4 +13,9 @@ urlpatterns = [
     path('signup/', worker_signup),
     path('company/signup/', company_signup),
     path('company/login/', company_login),
+    path('company/change/password/', company_change_password),
+    path('company/verify/signup/otp/', company_verify_signup_otp),
+    path('company/send/reset/password/otp/', company_send_reset_password_otp),
+    path('company/verify/reset/password/otp/', company_verify_reset_password_otp),
+    path('company/reset/password/', company_reset_password),
 ]

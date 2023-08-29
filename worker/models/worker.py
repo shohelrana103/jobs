@@ -46,6 +46,7 @@ class Worker(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     account_status = models.CharField(max_length=100, choices=ACCOUNT_STATUS, default=1)
+    linkedin_profile = models.CharField(null=True, blank=True)
 
 
     # def __str__(self):

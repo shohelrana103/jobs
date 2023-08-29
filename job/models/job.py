@@ -108,9 +108,13 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     employment_status = serializers.CharField(source='employment_status.status_name', read_only=True)
     employment_status_id = serializers.IntegerField(source='employment_status.id', read_only=True)
     country = serializers.CharField(source='country.country_name', read_only=True)
+    country_id = serializers.IntegerField(source='country.id', read_only=True)
     state = serializers.CharField(source='state.state_name', read_only=True)
+    state_id = serializers.IntegerField(source='state.id', read_only=True)
     city = serializers.CharField(source='city.city_name', read_only=True)
+    city_id = serializers.IntegerField(source='city.id', read_only=True)
     job_area = serializers.CharField(source='job_area.area_name', read_only=True)
+    job_area_id = serializers.IntegerField(source='job_area.id', read_only=True)
     work_place = serializers.CharField(source='work_place.work_place', read_only=True)
     work_place_id = serializers.IntegerField(source='work_place.id', read_only=True)
     benefits = JobBenefitSerializer(many=True)
@@ -123,6 +127,8 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     about_company = serializers.CharField(source='company.about_company', read_only=True)
     company_email = serializers.CharField(source='company.company_email', read_only=True)
     company_phone = serializers.CharField(source='company.company_contact_number', read_only=True)
+    company_size = serializers.IntegerField(source='company.company_size', read_only=True)
+
 
     class Meta:
         model = Job

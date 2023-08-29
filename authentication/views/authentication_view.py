@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view, authentication_classes
@@ -24,6 +25,10 @@ from django.core.mail import send_mail
 import os
 from twilio.rest import Client
 
+import clicksend_client
+from clicksend_client import SmsMessage
+from clicksend_client.rest import ApiException
+
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
@@ -46,7 +51,8 @@ def worker_send_otp(request):
             user_instance, is_create = User.objects.get_or_create(username=phone_number)
             # creating token
             token, create = Token.objects.get_or_create(user=user_instance)
-            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key, user_type=2)
+            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key,
+                                                      user_type=2)
             # create worker
             worker, cr = Worker.objects.get_or_create(phone_number=phone_number)
             if cr:
@@ -57,22 +63,52 @@ def worker_send_otp(request):
         UserOtp.objects.create(auth_user=auth_user,
                                otp=otp,
                                otp_send_time=datetime.now())
-        # write otp send code here
-        account_sid = settings.TWILIO_ACCOUNT_SID
-        auth_token = settings.TWILIO_AUTH_TOKEN
-        client = Client(account_sid, auth_token)
-        message_body = 'Your OTP is ' + str(otp)
+        # # write otp send code here
+        # Twilio code
+        # account_sid = settings.TWILIO_ACCOUNT_SID
+        # auth_token = settings.TWILIO_AUTH_TOKEN
+        # client = Client(account_sid, auth_token)
+        # message_body = 'Your OTP is ' + str(otp)
+        # try:
+        #     # for testing
+        #     if phone_number == '+12345678910':
+        #         content['status'] = 1
+        #         content['message'] = 'OTP send successful'
+        #         return JsonResponse(content, status=status.HTTP_200_OK)
+        #     message = client.messages.create(
+        #         body=message_body,
+        #         from_='+14708023425',
+        #         to=phone_number
+        #     )
+        # Configure HTTP basic authorization: BasicAuth
+        configuration = clicksend_client.Configuration()
+        configuration.username = settings.CLICKSEND_USERNAME
+        configuration.password = settings.CLICKSEND_APIKEY
+
+        # create an instance of the API class
+        api_instance = clicksend_client.SMSApi(clicksend_client.ApiClient(configuration))
+
+        # If you want to explictly set from, add the key _from to the message.
+        device_hash = ''
+        if 'device_hash' in request.data:
+            device_hash = request.data['device_hash']
+        message_body = 'Your OTP is: ' + str(otp) + "\n" + device_hash
+        sms_message = SmsMessage(source="php",
+                                 body=message_body,
+                                 to=phone_number)
+
+        sms_messages = clicksend_client.SmsMessageCollection(messages=[sms_message])
+
         try:
-            message = client.messages.create(
-                body=message_body,
-                from_='+14708023425',
-                to=phone_number
-            )
-            content['status'] = 1
-            content['message'] = 'OTP send successful'
+            # Send sms message(s)
+            api_response = api_instance.sms_send_post(sms_messages)
+            # print(api_response)
+        except ApiException as e:
+            print("Exception when calling SMSApi->sms_send_post: %s\n" % e)
         except Exception as e:
             content['message'] = 'Something wrong'
-
+        content['status'] = 1
+        content['message'] = 'OTP send successful'
     else:
         content['message'] = 'Require Parameter Missing'
     return JsonResponse(content, status=status.HTTP_200_OK)
@@ -95,6 +131,9 @@ def worker_verify_otp(request):
             return JsonResponse(content, status=status.HTTP_200_OK)
         # write send otp code here
         user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
+        # for testing purpose
+        if phone_number == '+12345678910' or phone_number == '+8801752746973':
+            user_otp.otp = 123456
         if user_otp and user_otp.otp == otp:
             auth_serialized = AuthenticationSerializer(auth_user)
             # worker details
@@ -125,6 +164,11 @@ def worker_send_otp_email(request):
     }
     if 'email' in request.data:
         email = request.data['email']
+        # for testing
+        if email == 'worker@workersrus.com':
+            content['status'] = 1
+            content['message'] = 'OTP send successful'
+            return JsonResponse(content, status=status.HTTP_200_OK)
         try:
             auth_user = Authentication.objects.get(email=email)
             try:
@@ -188,7 +232,10 @@ def worker_verify_otp_email(request):
             return JsonResponse(content, status=status.HTTP_200_OK)
         # write send otp code here
         user_otp = UserOtp.objects.filter(auth_user=auth_user).order_by('otp_send_time').last()
-        if user_otp and user_otp.otp == otp:
+        # for testing purpose
+        if email == 'worker@workersrus.com' or email == 'oahidzihad1@gmail.com':
+            user_otp.otp = 123456
+        if user_otp and user_otp.otp == int(otp):
             auth_serialized = AuthenticationSerializer(auth_user)
             # worker details
             worker = Worker.objects.get(pk=auth_user.user_id)
@@ -255,6 +302,10 @@ def worker_set_basic_information(request):
         worker.last_name = request.data['last_name']
     if 'email' in request.data:
         worker.email = request.data['email']
+    if 'linkedin_profile' in request.data:
+        worker.linkedin_profile = request.data['linkedin_profile']
+    if 'phone_number' in request.data:
+        worker.phone_number = request.data['phone_number']
     worker.save()
     content['status'] = 1
     content['message'] = 'Success'
@@ -450,7 +501,7 @@ def worker_set_education(request):
             degree_obj = Degree.objects.get(pk=degree['degree_id'])
         except:
             content['message'] = 'Degree Not Found'
-            return JsonResponse(content, status=status.HTTP_200_OK)
+            return JsonResponse(content, status=status.HTTP_404_NOT_FOUND)
         if degree['passing_year']:
             passing_year = degree['passing_year']
         else:
@@ -606,7 +657,8 @@ def worker_signup(request):
             # user_instance, is_create = User.objects.get_or_create()
             # creating token
             token, create = Token.objects.get_or_create(user=user_instance)
-            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key, user_type=2)
+            auth_user = Authentication.objects.create(user_phone=phone_number, username=phone_number, token=token.key,
+                                                      user_type=2)
             # create worker
             worker, cr = Worker.objects.get_or_create(phone_number=phone_number)
             if cr:
