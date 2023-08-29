@@ -64,6 +64,9 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "https://workersrus.netlify.app",
     "http://workersrus.netlify.app",
+    "http://localhost:3000",
+    "http://34.203.42.211:3000",
+
 ]
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
