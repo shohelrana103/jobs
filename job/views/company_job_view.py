@@ -21,6 +21,7 @@ from common.models.city import City
 from common.models.area import Area
 from worker.models.skill import Skill, SkillSerializer
 from common.views.zip_code import get_address_details
+from ..models.salary_type import SalaryType, SalaryTypeSerializer
 
 
 @api_view(['GET'])
@@ -50,6 +51,21 @@ def get_job_type(request):
     content['status'] = 1
     content['message'] = 'Success'
     content['data'] = serialized_job_types.data
+    return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def get_salary_type(request):
+    content = {
+        'status': 0
+    }
+    salary_types = SalaryType.objects.all()
+    serialized_salary_types = SalaryTypeSerializer(salary_types, many=True)
+    content['status'] = 1
+    content['message'] = 'Success'
+    content['data'] = serialized_salary_types.data
     return JsonResponse(content, status=status.HTTP_200_OK)
 
 
@@ -203,10 +219,10 @@ def create_job_basic_information(request):
         job_description = request.data['job_description']
     else:
         error_message['jobDescription'] = ["This field is required"]
-    if 'salary_type' in request.data:
-        salary_type = request.data['salary_type']
+    if 'salary_type_id' in request.data:
+        salary_type_id = request.data['salary_type_id']
     else:
-        error_message['salaryType'] = ["This field is required"]
+        error_message['salaryTypeId'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -256,6 +272,11 @@ def create_job_basic_information(request):
     except:
         content['message'] = "Job Type Not Found"
         return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        salary_type = SalaryType.objects.get(pk=salary_type_id)
+    except:
+        content['message'] = "Salary Type Not Found"
+        return JsonResponse(content, status=status.HTTP_200_OK)
     created_job = Job.objects.create(
         company=company,
         industry=company.industry,
@@ -270,7 +291,7 @@ def create_job_basic_information(request):
         application_deadline=application_deadline,
         job_responsibilities=job_responsibility,
         job_description=job_description,
-        salary_type=salary_type
+        salary_type_id=salary_type
     )
     content['status'] = 1
     content['message'] = 'Success'

@@ -11,6 +11,7 @@ urlpatterns = [
     path('all/', get_all_job),
     path('all/<int:worker_id>/', get_all_job_worker_id),
     path('types/', get_job_type),
+    path('salary/types/', get_salary_type),
     path('levels/', get_job_levels),
     path('employment/status/', get_job_employment_status),
     path('work/places/', get_job_work_places),

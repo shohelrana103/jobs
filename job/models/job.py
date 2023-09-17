@@ -17,7 +17,7 @@ from common.models.state import State
 from common.models.city import City
 from company.models.industry import Industry
 from ..models.job_placement import JobPlacement
-
+from ..models.salary_type import SalaryType
 JOB_STATUS = (
     ('1', 'Draft'),
     ('2', 'Active'),
@@ -54,7 +54,7 @@ class Job(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
     job_address = models.TextField(null=True, blank=True)
-    salary_type = models.CharField(max_length=255, null=True, blank=True)
+    salary_type_id = models.ForeignKey(SalaryType, null=True, blank=True, on_delete=models.SET_NULL)
     trade_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     certificate_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     special_restrictions = models.TextField(null=True, blank=True)

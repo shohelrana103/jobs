@@ -8,6 +8,8 @@ from .models.job_level import JobLevel
 from .models.word_place import WorkPlace
 from .models.benefits import JobBenefit
 from .models.job_placement import JobPlacement
+from .models.salary_type import SalaryType
+
 
 # Register your models here.
 
@@ -24,3 +26,4 @@ admin.site.register(JobLevel)
 admin.site.register(WorkPlace)
 admin.site.register(JobBenefit)
 admin.site.register(JobPlacement)
+admin.site.register(SalaryType)
