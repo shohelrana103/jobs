@@ -53,6 +53,7 @@ class Job(models.Model):
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
     job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
+    job_address = models.TextField(null=True, blank=True)
     salary_type = models.CharField(max_length=255, null=True, blank=True)
     trade_course_requirements = models.CharField(max_length=255, null=True, blank=True)
     certificate_course_requirements = models.CharField(max_length=255, null=True, blank=True)

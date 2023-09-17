@@ -20,6 +20,7 @@ from common.models.state import State
 from common.models.city import City
 from common.models.area import Area
 from worker.models.skill import Skill, SkillSerializer
+from common.views.zip_code import get_address_details
 
 
 @api_view(['GET'])
@@ -514,72 +515,87 @@ def create_job_requirements(request):
 
 @api_view(['POST'])
 @authentication_classes((TokenAuthentication,))
-@permission_classes((IsAuthenticated,))
+# @permission_classes((IsAuthenticated,))
 def create_job_address(request):
     content = {
         'status': 0
     }
     error_message = {}
+    # if 'job_id' in request.data:
+    #     job_id = request.data['job_id']
+    # else:
+    #     error_message['jobId'] = ["This field is required"]
+    # if 'country_id' in request.data:
+    #     country_id = request.data['country_id']
+    # else:
+    #     error_message['countryId'] = ["This field is required"]
+    # if 'state_id' in request.data:
+    #     state_id = request.data['state_id']
+    # else:
+    #     error_message['stateId'] = ["This field is required"]
+    # if 'city_id' in request.data:
+    #     city_id = request.data['city_id']
+    # else:
+    #     error_message['cityId'] = ["This field is required"]
+    # if 'area_id' in request.data:
+    #     area_id = request.data['area_id']
+    # else:
+    #     error_message['areaId'] = ["This field is required"]
+    # if len(error_message) != 0:
+    #     content['message'] = 'Invalid data'
+    #     content['error'] = error_message
+    #     return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
+    # try:
+    #     job = Job.objects.get(pk=job_id)
+    # except:
+    #     content['message'] = "Job Not Found"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     country = Country.objects.get(pk=country_id)
+    # except:
+    #     content['message'] = "Country Not Found"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     state = State.objects.get(pk=state_id)
+    # except:
+    #     content['message'] = "State Not Found"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     city = City.objects.get(pk=city_id)
+    # except:
+    #     content['message'] = "City Not Found"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     area = Area.objects.get(pk=area_id)
+    # except:
+    #     content['message'] = "Area Not Found"
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
     if 'job_id' in request.data:
         job_id = request.data['job_id']
     else:
         error_message['jobId'] = ["This field is required"]
-    if 'country_id' in request.data:
-        country_id = request.data['country_id']
+    if 'zip_code' in request.data:
+        zip_code = request.data['zip_code']
     else:
-        error_message['countryId'] = ["This field is required"]
-    if 'state_id' in request.data:
-        state_id = request.data['state_id']
+        error_message['zipCode'] = ["This field is required"]
+    if 'job_address' in request.data:
+        job_address = request.data['job_address']
     else:
-        error_message['stateId'] = ["This field is required"]
-    if 'city_id' in request.data:
-        city_id = request.data['city_id']
-    else:
-        error_message['cityId'] = ["This field is required"]
-    if 'area_id' in request.data:
-        area_id = request.data['area_id']
-    else:
-        error_message['areaId'] = ["This field is required"]
+        error_message['jobAddress'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
         return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
-    # if all(k in request.data for k in ("job_id", "country_id", "state_id", "city_id",
-    #                                    "area_id")):
-    #     job_id = request.data['job_id']
-    #     country_id = request.data['country_id']
-    #     state_id = request.data['state_id']
-    #     city_id = request.data['city_id']
-    #     area_id = request.data['area_id']
     try:
         job = Job.objects.get(pk=job_id)
     except:
         content['message'] = "Job Not Found"
         return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        country = Country.objects.get(pk=country_id)
-    except:
-        content['message'] = "Country Not Found"
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        state = State.objects.get(pk=state_id)
-    except:
-        content['message'] = "State Not Found"
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        city = City.objects.get(pk=city_id)
-    except:
-        content['message'] = "City Not Found"
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        area = Area.objects.get(pk=area_id)
-    except:
-        content['message'] = "Area Not Found"
-        return JsonResponse(content, status=status.HTTP_200_OK)
+    country, city, state = get_address_details(zip_code)
     job.country = country
     job.state = state
     job.city = city
-    job.job_area = area
+    job.job_address = job_address
     job.save()
     content['status'] = 1
     content['message'] = 'Update Successful'
