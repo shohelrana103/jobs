@@ -307,6 +307,8 @@ def worker_set_basic_information(request):
         worker.linkedin_profile = request.data['linkedin_profile']
     if 'phone_number' in request.data:
         worker.phone_number = request.data['phone_number']
+    if 'passport_number' in request.data:
+        worker.passport_number = request.data['passport_number']
     worker.save()
     content['status'] = 1
     content['message'] = 'Success'

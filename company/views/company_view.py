@@ -85,22 +85,26 @@ def company_profile_update(request):
     else:
         error_message['address'] = ["This field is required"]
 
-    # if 'country_id' in request.data:
-    #     country_id = request.data['country_id']
-    # else:
-    #     error_message['countryId'] = ["This field is required"]
-    # if 'state_id' in request.data:
-    #     state_id = request.data['state_id']
-    # else:
-    #     error_message['stateId'] = ["This field is required"]
-    # if 'city_id' in request.data:
-    #     city_id = request.data['city_id']
-    # else:
-    #     error_message['cityId'] = ["This field is required"]
-    # if 'area_id' in request.data:
-    #     area_id = request.data['area_id']
-    # else:
-    #     error_message['areaId'] = ["This field is required"]
+    if 'company_name' in request.data:
+        company_name = request.data['company_name']
+    else:
+        error_message['companyName'] = ["This field is required"]
+    if 'company_email' in request.data:
+        company_email = request.data['company_email']
+    else:
+        error_message['CompanyEmail'] = ["This field is required"]
+    if 'phone_number' in request.data:
+        phone_number = request.data['phone_number']
+    else:
+        error_message['phoneNumber'] = ["This field is required"]
+    if 'about_company' in request.data:
+        about_company = request.data['about_company']
+    else:
+        error_message['aboutCompany'] = ["This field is required"]
+    if 'company_size' in request.data:
+        company_size = request.data['company_size']
+    else:
+        error_message['companySize'] = ["This field is required"]
     if 'zip_code' in request.data:
         zip_code = request.data['zip_code']
     else:
@@ -157,10 +161,18 @@ def company_profile_update(request):
     #     content['message'] = 'Area Not Found'
     #     return JsonResponse(content, status=status.HTTP_200_OK)
     country, city, state = get_address_details(zip_code)
+    company.company_name = company_name
+    company.company_email = company_email
+    company.phone_number = phone_number
+    company.about_company = about_company
+    company.company_size = company_size
     company.industry = industry
     company.country = country
     company.state = state
     company.city = city
+    if 'company_website' in request.data:
+        company_website = request.data['company_website']
+        company.company_website = company_website
     # company.area = area
     company.contact_person_name = contact_person_name
     company.company_address_line_1 = address
