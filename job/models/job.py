@@ -123,6 +123,7 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     benefits = JobBenefitSerializer(many=True)
     skills_requirements = SkillSerializer(many=True)
     gender_requirements = GenderSerializer(many=True)
+    degree_id = serializers.CharField(source='degree_requirements.id', read_only=True)
     degree_requirements = serializers.CharField(source='degree_requirements.degree_name', read_only=True)
     cv_receiving_option = ResumeReceivingOptionStatusSerializer(many=True)
     company_logo = serializers.SerializerMethodField()
