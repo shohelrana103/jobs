@@ -616,6 +616,7 @@ def create_job_address(request):
     job.country = country
     job.state = state
     job.city = city
+    job.zip_code = zip_code
     job.job_address = job_address
     job.save()
     content['status'] = 1

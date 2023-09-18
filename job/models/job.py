@@ -49,6 +49,7 @@ class Job(models.Model):
     application_deadline = models.DateTimeField()
     cv_receiving_option = models.ManyToManyField(ResumeReceivingOption)
     job_responsibilities = models.TextField(null=True, blank=True)
+    zip_code = models.CharField(max_length=200, null=True, blank=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
     state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
     city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
@@ -87,7 +88,7 @@ class JobSerializer(serializers.ModelSerializer):
         model = Job
         fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
                   'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
-                  'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type')
+                  'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type', 'zip_code')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
