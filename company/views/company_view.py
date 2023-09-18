@@ -80,10 +80,10 @@ def company_profile_update(request):
     else:
         error_message['industryId'] = ["This field is required"]
 
-    if 'address' in request.data:
-        address = request.data['address']
+    if 'company_address_line_1' in request.data:
+        company_address_line_1 = request.data['company_address_line_1']
     else:
-        error_message['address'] = ["This field is required"]
+        error_message['company_address_line_1'] = ["This field is required"]
 
     if 'company_name' in request.data:
         company_name = request.data['company_name']
@@ -175,7 +175,7 @@ def company_profile_update(request):
         company.company_website = company_website
     # company.area = area
     company.contact_person_name = contact_person_name
-    company.company_address_line_1 = address
+    company.company_address_line_1 = company_address_line_1
     company.zip_code = zip_code
     company.contact_person_position = contact_person_position
     company.contact_person_mobile = contact_person_mobile
