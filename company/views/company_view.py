@@ -93,10 +93,10 @@ def company_profile_update(request):
         company_email = request.data['company_email']
     else:
         error_message['CompanyEmail'] = ["This field is required"]
-    if 'phone_number' in request.data:
-        phone_number = request.data['phone_number']
+    if 'company_contact_number' in request.data:
+        company_contact_number = request.data['company_contact_number']
     else:
-        error_message['phoneNumber'] = ["This field is required"]
+        error_message['company_contact_number'] = ["This field is required"]
     if 'about_company' in request.data:
         about_company = request.data['about_company']
     else:
@@ -163,7 +163,7 @@ def company_profile_update(request):
     country, city, state = get_address_details(zip_code)
     company.company_name = company_name
     company.company_email = company_email
-    company.phone_number = phone_number
+    company.company_contact_number = company_contact_number
     company.about_company = about_company
     company.company_size = company_size
     company.industry = industry
