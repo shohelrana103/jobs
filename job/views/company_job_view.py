@@ -378,10 +378,10 @@ def edit_job_basic_information(request):
         job_description = request.data['job_description']
     else:
         error_message['jobDescription'] = ["This field is required"]
-    if 'salary_type' in request.data:
-        salary_type = request.data['salary_type']
+    if 'salary_type_id' in request.data:
+        salary_type_id = request.data['salary_type_id']
     else:
-        error_message['salaryType'] = ["This field is required"]
+        error_message['salaryTypeId'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -415,6 +415,11 @@ def edit_job_basic_information(request):
         job_type = JobType.objects.get(pk=job_type_id)
     except:
         content['message'] = "Job Type Not Found"
+        return JsonResponse(content, status=status.HTTP_200_OK)
+    try:
+        salary_type = SalaryType.objects.get(pk=salary_type_id)
+    except:
+        content['message'] = "Salary Type Not Found"
         return JsonResponse(content, status=status.HTTP_200_OK)
     job.job_type = job_type
     job.job_category = job_category
