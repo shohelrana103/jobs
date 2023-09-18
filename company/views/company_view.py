@@ -16,6 +16,7 @@ from worker.models.job_application import JobApplication
 from job.models.job import Job, JobSerializer
 from worker.models.worker import Worker, WorkerSerializer, WorkerDetailsSerializer
 from datetime import datetime
+from common.views.zip_code import get_address_details
 
 
 class CompanyView(APIView):
@@ -84,22 +85,22 @@ def company_profile_update(request):
     else:
         error_message['address'] = ["This field is required"]
 
-    if 'country_id' in request.data:
-        country_id = request.data['country_id']
-    else:
-        error_message['countryId'] = ["This field is required"]
-    if 'state_id' in request.data:
-        state_id = request.data['state_id']
-    else:
-        error_message['stateId'] = ["This field is required"]
-    if 'city_id' in request.data:
-        city_id = request.data['city_id']
-    else:
-        error_message['cityId'] = ["This field is required"]
-    if 'area_id' in request.data:
-        area_id = request.data['area_id']
-    else:
-        error_message['areaId'] = ["This field is required"]
+    # if 'country_id' in request.data:
+    #     country_id = request.data['country_id']
+    # else:
+    #     error_message['countryId'] = ["This field is required"]
+    # if 'state_id' in request.data:
+    #     state_id = request.data['state_id']
+    # else:
+    #     error_message['stateId'] = ["This field is required"]
+    # if 'city_id' in request.data:
+    #     city_id = request.data['city_id']
+    # else:
+    #     error_message['cityId'] = ["This field is required"]
+    # if 'area_id' in request.data:
+    #     area_id = request.data['area_id']
+    # else:
+    #     error_message['areaId'] = ["This field is required"]
     if 'zip_code' in request.data:
         zip_code = request.data['zip_code']
     else:
@@ -130,36 +131,37 @@ def company_profile_update(request):
     except:
         content['message'] = 'Company Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        country = Country.objects.get(pk=country_id)
-    except:
-        content['message'] = 'Country Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     country = Country.objects.get(pk=country_id)
+    # except:
+    #     content['message'] = 'Country Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
     try:
         industry = Industry.objects.get(pk=industry_id)
     except:
         content['message'] = 'Industry Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        state = State.objects.get(pk=state_id)
-    except:
-        content['message'] = 'State Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        city = City.objects.get(pk=city_id)
-    except:
-        content['message'] = 'City Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        area = Area.objects.get(pk=area_id)
-    except:
-        content['message'] = 'Area Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     state = State.objects.get(pk=state_id)
+    # except:
+    #     content['message'] = 'State Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     city = City.objects.get(pk=city_id)
+    # except:
+    #     content['message'] = 'City Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     area = Area.objects.get(pk=area_id)
+    # except:
+    #     content['message'] = 'Area Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    country, city, state = get_address_details(zip_code)
     company.industry = industry
     company.country = country
     company.state = state
     company.city = city
-    company.area = area
+    # company.area = area
     company.contact_person_name = contact_person_name
     company.company_address_line_1 = address
     company.zip_code = zip_code

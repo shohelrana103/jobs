@@ -28,6 +28,7 @@ from twilio.rest import Client
 import clicksend_client
 from clicksend_client import SmsMessage
 from clicksend_client.rest import ApiException
+from common.views.zip_code import get_address_details
 
 
 @api_view(['POST'])
@@ -354,30 +355,30 @@ def worker_set_address(request):
         user_id = request.data['user_id']
     else:
         error_message['userId'] = ["This field is required"]
-    if 'country_id' in request.data:
-        country_id = request.data['country_id']
-    else:
-        error_message['countryId'] = ["This field is required"]
-    if 'state_id' in request.data:
-        state_id = request.data['state_id']
-    else:
-        error_message['stateId'] = ["This field is required"]
-    if 'city_id' in request.data:
-        city_id = request.data['city_id']
-    else:
-        error_message['cityId'] = ["This field is required"]
-    if 'area_id' in request.data:
-        area_id = request.data['area_id']
-    else:
-        error_message['areaId'] = ["This field is required"]
+    # if 'country_id' in request.data:
+    #     country_id = request.data['country_id']
+    # else:
+    #     error_message['countryId'] = ["This field is required"]
+    # if 'state_id' in request.data:
+    #     state_id = request.data['state_id']
+    # else:
+    #     error_message['stateId'] = ["This field is required"]
+    # if 'city_id' in request.data:
+    #     city_id = request.data['city_id']
+    # else:
+    #     error_message['cityId'] = ["This field is required"]
+    # if 'area_id' in request.data:
+    #     area_id = request.data['area_id']
+    # else:
+    #     error_message['areaId'] = ["This field is required"]
     if 'address_line1' in request.data:
         address_line1 = request.data['address_line1']
     else:
         error_message['addressLine1'] = ["This field is required"]
-    if 'postal_code' in request.data:
-        postal_code = request.data['postal_code']
+    if 'zip_code' in request.data:
+        zip_code = request.data['zip_code']
     else:
-        error_message['postalCode'] = ["This field is required"]
+        error_message['zipCode'] = ["This field is required"]
     if len(error_message) != 0:
         content['message'] = 'Invalid data'
         content['error'] = error_message
@@ -387,32 +388,33 @@ def worker_set_address(request):
     except Worker.DoesNotExist:
         content['message'] = 'Worker Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        country = Country.objects.get(pk=country_id)
-    except:
-        content['message'] = 'Country Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        state = State.objects.get(pk=state_id)
-    except:
-        content['message'] = 'State Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        city = City.objects.get(pk=city_id)
-    except:
-        content['message'] = 'City Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
-    try:
-        area = Area.objects.get(pk=area_id)
-    except:
-        content['message'] = 'Area Not Found'
-        return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     country = Country.objects.get(pk=country_id)
+    # except:
+    #     content['message'] = 'Country Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     state = State.objects.get(pk=state_id)
+    # except:
+    #     content['message'] = 'State Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     city = City.objects.get(pk=city_id)
+    # except:
+    #     content['message'] = 'City Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    # try:
+    #     area = Area.objects.get(pk=area_id)
+    # except:
+    #     content['message'] = 'Area Not Found'
+    #     return JsonResponse(content, status=status.HTTP_200_OK)
+    country, city, state = get_address_details(zip_code)
     worker.country = country
     worker.state = state
     worker.city = city
-    worker.area = area
+    # worker.area = area
     worker.address_line1 = address_line1
-    worker.postal_code = postal_code
+    worker.zip_code = zip_code
     if 'address_line2' in request.data:
         worker.address_line2 = request.data['address_line2']
     worker.save()

@@ -31,7 +31,7 @@ class Worker(models.Model):
     area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, blank=True)
     address_line1 = models.TextField(null=True, blank=True)
     address_line2 = models.TextField(null=True, blank=True)
-    postal_code = models.CharField(max_length=30, null=True, blank=True)
+    zip_code = models.CharField(max_length=30, null=True, blank=True)
     educations = models.ManyToManyField(EducationHistory)
     employment_history = models.ManyToManyField(EmploymentHistory, null=True, blank=True)
     skill_set = models.ManyToManyField(Skill)
@@ -58,7 +58,7 @@ class WorkerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Worker
-        fields = ('id', 'first_name', 'middle_name', 'last_name', 'skill_set')
+        fields = ('id', 'first_name', 'middle_name', 'last_name', 'skill_set', 'zip_code')
 
 
 class WorkerDetailsSerializer(serializers.ModelSerializer):
