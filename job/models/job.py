@@ -94,7 +94,7 @@ class JobSerializer(serializers.ModelSerializer):
             'id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category',
             'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
             'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type', 'zip_code',
-            'job_address')
+            'job_address', 'zip_address')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
