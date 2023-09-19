@@ -80,7 +80,7 @@ class JobSerializer(serializers.ModelSerializer):
     # state = serializers.CharField(source='state.state_name', read_only=True)
     # city = serializers.CharField(source='city.city_name', read_only=True)
     # job_area = serializers.CharField(source='job_area.area_name', read_only=True)
-    # company_logo = serializers.SerializerMethodField()
+    company_logo = serializers.SerializerMethodField()
     zip_address = ZipAddressSerializer(read_only=True)
     company_website = serializers.CharField(source='company.company_website', read_only=True)
     about_company = serializers.CharField(source='company.about_company', read_only=True)
