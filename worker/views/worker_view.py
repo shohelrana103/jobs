@@ -103,7 +103,7 @@ def worker_applied_job(request, worker_id):
     favorite_job_ids = list(
         WorkerFavoriteJob.objects.filter(worker_id=worker, is_active=True).values_list('job_id', flat=True))
     applied_jobs = list(JobApplication.objects.filter(worker_id=worker).values_list('job_id', flat=True))
-    jobs = Job.objects.filter(pk__in=applied_jobs)
+    jobs = Job.objects.filter(pk__in=applied_jobs).order_by('-id')
     send_data = []
     for job in jobs:
         serialized_job = JobSerializer(job, context={'request': request}).data

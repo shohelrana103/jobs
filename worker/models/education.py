@@ -21,8 +21,9 @@ class EducationHistory(models.Model):
 
 
 class EducationHistorySerializer(serializers.ModelSerializer):
+    degree_id = serializers.IntegerField(source='degree.id', read_only=True)
     degree_name = serializers.CharField(source='degree.degree_name', read_only=True)
 
     class Meta:
         model = EducationHistory
-        fields = ('id', 'degree_name', 'institute', 'passing_year', 'is_currently_reading', 'result')
+        fields = ('id', 'degree_id', 'degree_name', 'institute', 'passing_year', 'is_currently_reading', 'result')

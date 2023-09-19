@@ -276,7 +276,7 @@ def get_all_job_by_company(request, company_id):
         content['message'] = 'Company Not Found'
         return JsonResponse(content, status=status.HTTP_200_OK)
     query_params = request.query_params
-    company_jobs = Job.objects.filter(company=company, job_status=2)
+    company_jobs = Job.objects.filter(company=company, job_status=2).order_by('-id')
     if "status" in query_params:
         req_status = query_params['status']
         if req_status == 'old':
