@@ -6,7 +6,7 @@ from .models.industry import Industry
 # Register your models here.
 class CompanyAdmin(admin.ModelAdmin):
     list_display = ['company_name', 'company_contact_number', 'company_address_line_1',
-                    'country', 'contact_person_name']
+                     'contact_person_name']
     # list_display_links = None
     # list_editable = ['quantity', 'description', 'tax_rate', ]
 

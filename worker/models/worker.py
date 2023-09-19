@@ -8,6 +8,7 @@ from ..models.employment_history import EmploymentHistory, EmploymentHistorySeri
 from ..models.education import EducationHistory, EducationHistorySerializer
 from common.models.area import Area
 from common.models.gender import Gender
+from common.models.zip_address import ZipAddress, ZipAddressSerializer
 
 ACCOUNT_STATUS = (
     ('1', 'Active'),
@@ -25,10 +26,11 @@ class Worker(models.Model):
     phone_number = models.CharField(max_length=50, null=True, blank=True, unique=True)
     professional_description = models.TextField(null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
-    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
-    area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, blank=True)
+    # country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
+    # state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
+    # city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
+    # area = models.ForeignKey(Area, on_delete=models.SET_NULL, null=True, blank=True)
+    zip_address = models.ForeignKey(ZipAddress, on_delete=models.SET_NULL, null=True, blank=True)
     address_line1 = models.TextField(null=True, blank=True)
     address_line2 = models.TextField(null=True, blank=True)
     zip_code = models.CharField(max_length=30, null=True, blank=True)
@@ -55,17 +57,19 @@ class Worker(models.Model):
 
 class WorkerSerializer(serializers.ModelSerializer):
     skill_set = SkillSerializer(read_only=True, many=True)
+    zip_address = ZipAddressSerializer(read_only=True)
 
     class Meta:
         model = Worker
-        fields = ('id', 'first_name', 'middle_name', 'last_name', 'skill_set', 'zip_code')
+        fields = ('id', 'first_name', 'middle_name', 'last_name', 'skill_set', 'zip_code', 'zip_address')
 
 
 class WorkerDetailsSerializer(serializers.ModelSerializer):
-    country_name = serializers.CharField(source='country.country_name', read_only=True)
-    state_name = serializers.CharField(source='state.state_name', read_only=True)
-    city_name = serializers.CharField(source='city.city_name', read_only=True)
-    area_name = serializers.CharField(source='area.area_name', read_only=True)
+    # country_name = serializers.CharField(source='country.country_name', read_only=True)
+    # state_name = serializers.CharField(source='state.state_name', read_only=True)
+    # city_name = serializers.CharField(source='city.city_name', read_only=True)
+    # area_name = serializers.CharField(source='area.area_name', read_only=True)
+    zip_address = ZipAddressSerializer(read_only=True)
     educations = EducationHistorySerializer(read_only=True, many=True)
     employment_history = EmploymentHistorySerializer(read_only=True, many=True)
     skill_set = SkillSerializer(read_only=True, many=True)

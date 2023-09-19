@@ -15,9 +15,11 @@ from ..models.benefits import JobBenefit, JobBenefitSerializer
 from common.models.country import Country
 from common.models.state import State
 from common.models.city import City
+from common.models.zip_address import ZipAddress, ZipAddressSerializer
 from company.models.industry import Industry
 from ..models.job_placement import JobPlacement
 from ..models.salary_type import SalaryType
+
 JOB_STATUS = (
     ('1', 'Draft'),
     ('2', 'Active'),
@@ -29,7 +31,7 @@ JOB_STATUS = (
 class Job(models.Model):
     id = models.BigAutoField(primary_key=True)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    industry = models.ForeignKey(Industry, on_delete=models.CASCADE, null=True,blank=True)
+    industry = models.ForeignKey(Industry, on_delete=models.CASCADE, null=True, blank=True)
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     job_category = models.ForeignKey(JobCategory, on_delete=models.CASCADE)
     job_title = models.CharField(max_length=255)
@@ -50,10 +52,11 @@ class Job(models.Model):
     cv_receiving_option = models.ManyToManyField(ResumeReceivingOption)
     job_responsibilities = models.TextField(null=True, blank=True)
     zip_code = models.CharField(max_length=200, null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
-    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
-    job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
+    zip_address = models.ForeignKey(ZipAddress, on_delete=models.SET_NULL, null=True, blank=True)
+    # country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
+    # state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
+    # city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
+    # job_area = models.ForeignKey(Area, null=True, blank=True, on_delete=models.SET_NULL)
     job_address = models.TextField(null=True, blank=True)
     salary_type_id = models.ForeignKey(SalaryType, null=True, blank=True, on_delete=models.SET_NULL)
     trade_course_requirements = models.CharField(max_length=255, null=True, blank=True)
@@ -73,11 +76,12 @@ class JobSerializer(serializers.ModelSerializer):
     company_name = serializers.CharField(source='company.company_name', read_only=True)
     job_type = serializers.CharField(source='job_type.type_name', read_only=True)
     job_category = serializers.CharField(source='job_category.category_name', read_only=True)
-    country = serializers.CharField(source='country.country_name', read_only=True)
-    state = serializers.CharField(source='state.state_name', read_only=True)
-    city = serializers.CharField(source='city.city_name', read_only=True)
-    job_area = serializers.CharField(source='job_area.area_name', read_only=True)
-    company_logo = serializers.SerializerMethodField()
+    # country = serializers.CharField(source='country.country_name', read_only=True)
+    # state = serializers.CharField(source='state.state_name', read_only=True)
+    # city = serializers.CharField(source='city.city_name', read_only=True)
+    # job_area = serializers.CharField(source='job_area.area_name', read_only=True)
+    # company_logo = serializers.SerializerMethodField()
+    zip_address = ZipAddressSerializer(read_only=True)
     company_website = serializers.CharField(source='company.company_website', read_only=True)
     about_company = serializers.CharField(source='company.about_company', read_only=True)
     company_email = serializers.CharField(source='company.company_email', read_only=True)
@@ -86,9 +90,11 @@ class JobSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Job
-        fields = ('id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category', 'country', 'state', 'city', 'job_area',
-                  'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
-                  'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type', 'zip_code', 'job_address')
+        fields = (
+            'id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category',
+            'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
+            'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type', 'zip_code',
+            'job_address')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
@@ -110,14 +116,15 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     job_level_id = serializers.IntegerField(source='job_level.id', read_only=True)
     employment_status = serializers.CharField(source='employment_status.status_name', read_only=True)
     employment_status_id = serializers.IntegerField(source='employment_status.id', read_only=True)
-    country = serializers.CharField(source='country.country_name', read_only=True)
-    country_id = serializers.IntegerField(source='country.id', read_only=True)
-    state = serializers.CharField(source='state.state_name', read_only=True)
-    state_id = serializers.IntegerField(source='state.id', read_only=True)
-    city = serializers.CharField(source='city.city_name', read_only=True)
-    city_id = serializers.IntegerField(source='city.id', read_only=True)
-    job_area = serializers.CharField(source='job_area.area_name', read_only=True)
-    job_area_id = serializers.IntegerField(source='job_area.id', read_only=True)
+    # country = serializers.CharField(source='country.country_name', read_only=True)
+    # country_id = serializers.IntegerField(source='country.id', read_only=True)
+    # state = serializers.CharField(source='state.state_name', read_only=True)
+    # state_id = serializers.IntegerField(source='state.id', read_only=True)
+    # city = serializers.CharField(source='city.city_name', read_only=True)
+    # city_id = serializers.IntegerField(source='city.id', read_only=True)
+    # job_area = serializers.CharField(source='job_area.area_name', read_only=True)
+    # job_area_id = serializers.IntegerField(source='job_area.id', read_only=True)
+    zip_address = ZipAddressSerializer(read_only=True)
     work_place = serializers.CharField(source='work_place.work_place', read_only=True)
     work_place_id = serializers.IntegerField(source='work_place.id', read_only=True)
     benefits = JobBenefitSerializer(many=True)

@@ -5,6 +5,7 @@ from common.models.state import State
 from common.models.area import Area
 from rest_framework import serializers
 from ..models.industry import Industry
+from common.models.zip_address import ZipAddress, ZipAddressSerializer
 
 
 class Company(models.Model):
@@ -15,11 +16,12 @@ class Company(models.Model):
     company_email = models.CharField(max_length=50, null=True, blank=True)
     company_address_line_1 = models.TextField(null=True, blank=True)
     company_address_line_2 = models.TextField(null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
-    state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
-    area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
+    # city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
+    # state = models.ForeignKey(State, on_delete=models.CASCADE, null=True, blank=True)
+    # country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True, blank=True)
+    # area = models.ForeignKey(Area, on_delete=models.CASCADE, null=True, blank=True)
     zip_code = models.CharField(max_length=30, null=True, blank=True)
+    zip_address = models.ForeignKey(ZipAddress, on_delete=models.SET_NULL, null=True, blank=True)
     contact_person_name = models.CharField(max_length=255, null=True, blank=True)
     contact_person_position = models.CharField(max_length=255, null=True, blank=True)
     contact_person_mobile = models.CharField(max_length=255, null=True, blank=True)
@@ -42,21 +44,21 @@ class Company(models.Model):
 class CompanySerializer(serializers.ModelSerializer):
     industry = serializers.CharField(source='industry.industry_name', read_only=True)
     industry_id = serializers.IntegerField(source='industry.id', read_only=True)
-    country = serializers.CharField(source='country.country_name', read_only=True)
-    country_id = serializers.IntegerField(source='country.id', read_only=True)
-    state = serializers.CharField(source='state.state_name', read_only=True)
-    state_id = serializers.IntegerField(source='state.id', read_only=True)
-    city = serializers.CharField(source='city.city_name', read_only=True)
-    city_id = serializers.IntegerField(source='city.id', read_only=True)
-    area = serializers.CharField(source='area.area_name', read_only=True)
-    area_id = serializers.IntegerField(source='area.id', read_only=True)
+    # country = serializers.CharField(source='country.country_name', read_only=True)
+    # country_id = serializers.IntegerField(source='country.id', read_only=True)
+    # state = serializers.CharField(source='state.state_name', read_only=True)
+    # state_id = serializers.IntegerField(source='state.id', read_only=True)
+    # city = serializers.CharField(source='city.city_name', read_only=True)
+    # city_id = serializers.IntegerField(source='city.id', read_only=True)
+    # area = serializers.CharField(source='area.area_name', read_only=True)
+    # area_id = serializers.IntegerField(source='area.id', read_only=True)
+    zip_address = ZipAddressSerializer(read_only=True)
     company_logo = serializers.SerializerMethodField()
 
     class Meta:
         model = Company
-        fields = ('id', 'industry', 'company_name', 'company_logo', 'company_contact_number', 'country',
-                  'state', 'city', 'area', 'company_website', 'company_size', 'country_id', 'state_id',
-                  'city_id', 'area_id', 'industry_id')
+        fields = ('id', 'industry', 'company_name', 'company_logo', 'company_contact_number',
+                  'company_website', 'company_size', 'industry_id')
 
     def get_company_logo(self, company):
         if company.company_logo:
@@ -69,14 +71,15 @@ class CompanySerializer(serializers.ModelSerializer):
 class CompanyDetailsSerializer(serializers.ModelSerializer):
     industry = serializers.CharField(source='industry.industry_name', read_only=True)
     industry_id = serializers.IntegerField(source='industry.id', read_only=True)
-    country = serializers.CharField(source='country.country_name', read_only=True)
-    country_id = serializers.IntegerField(source='country.id', read_only=True)
-    state = serializers.CharField(source='state.state_name', read_only=True)
-    state_id = serializers.IntegerField(source='state.id', read_only=True)
-    city = serializers.CharField(source='city.city_name', read_only=True)
-    city_id = serializers.IntegerField(source='city.id', read_only=True)
-    area = serializers.CharField(source='area.area_name', read_only=True)
-    area_id = serializers.IntegerField(source='area.id', read_only=True)
+    # country = serializers.CharField(source='country.country_name', read_only=True)
+    # country_id = serializers.IntegerField(source='country.id', read_only=True)
+    # state = serializers.CharField(source='state.state_name', read_only=True)
+    # state_id = serializers.IntegerField(source='state.id', read_only=True)
+    # city = serializers.CharField(source='city.city_name', read_only=True)
+    # city_id = serializers.IntegerField(source='city.id', read_only=True)
+    # area = serializers.CharField(source='area.area_name', read_only=True)
+    # area_id = serializers.IntegerField(source='area.id', read_only=True)
+    zip_address = ZipAddressSerializer(read_only=True)
     company_logo = serializers.SerializerMethodField()
 
     class Meta:

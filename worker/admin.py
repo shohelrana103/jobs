@@ -10,8 +10,7 @@ from .models.job_favorite import WorkerFavoriteJob
 
 # Register your models here.
 class WorkerAdmin(admin.ModelAdmin):
-    list_display = ['first_name', 'email', 'phone_number',
-                    'country', 'gender']
+    list_display = ['first_name', 'email', 'phone_number', 'gender']
     filter_horizontal = ('educations', 'employment_history', 'skill_set')
 
 

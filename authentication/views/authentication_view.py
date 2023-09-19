@@ -410,13 +410,14 @@ def worker_set_address(request):
     # except:
     #     content['message'] = 'Area Not Found'
     #     return JsonResponse(content, status=status.HTTP_200_OK)
-    country, city, state = get_address_details(zip_code)
-    worker.country = country
-    worker.state = state
-    worker.city = city
+    # country, city, state = get_address_details(zip_code)
+    # worker.country = country
+    # worker.state = state
+    # worker.city = city
     # worker.area = area
     worker.address_line1 = address_line1
     worker.zip_code = zip_code
+    worker.zip_address = get_address_details(zip_code)
     if 'address_line2' in request.data:
         worker.address_line2 = request.data['address_line2']
     worker.save()

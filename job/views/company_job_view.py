@@ -617,12 +617,12 @@ def create_job_address(request):
     except:
         content['message'] = "Job Not Found"
         return JsonResponse(content, status=status.HTTP_200_OK)
-    country, city, state = get_address_details(zip_code)
-    job.country = country
-    job.state = state
-    job.city = city
+    # job.country = country
+    # job.state = state
+    # job.city = city
     job.zip_code = zip_code
     job.job_address = job_address
+    job.zip_address = get_address_details(zip_code)
     job.save()
     content['status'] = 1
     content['message'] = 'Update Successful'

@@ -160,16 +160,17 @@ def company_profile_update(request):
     # except:
     #     content['message'] = 'Area Not Found'
     #     return JsonResponse(content, status=status.HTTP_200_OK)
-    country, city, state = get_address_details(zip_code)
+    # country, city, state = get_address_details(zip_code)
     company.company_name = company_name
     company.company_email = company_email
     company.company_contact_number = company_contact_number
     company.about_company = about_company
     company.company_size = company_size
     company.industry = industry
-    company.country = country
-    company.state = state
-    company.city = city
+    # company.country = country
+    # company.state = state
+    # company.city = city
+    company.zip_address = get_address_details(zip_code)
     if 'company_website' in request.data:
         company_website = request.data['company_website']
         company.company_website = company_website
