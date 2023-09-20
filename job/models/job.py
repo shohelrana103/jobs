@@ -87,6 +87,7 @@ class JobSerializer(serializers.ModelSerializer):
     company_email = serializers.CharField(source='company.company_email', read_only=True)
     company_phone = serializers.CharField(source='company.company_contact_number', read_only=True)
     salary_type = serializers.CharField(source='salary_type_id.name', read_only=True)
+    company_address = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -94,12 +95,18 @@ class JobSerializer(serializers.ModelSerializer):
             'id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category',
             'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
             'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type', 'zip_code',
-            'job_address', 'zip_address')
+            'job_address', 'zip_address', 'company_address')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:
             request = self.context.get('request')
             return str(request.build_absolute_uri(obj.company.company_logo.url))
+        else:
+            return None
+
+    def get_company_address(self, obj):
+        if obj.company:
+            return ZipAddressSerializer(obj.company.zip_address).data
         else:
             return None
 
@@ -140,6 +147,7 @@ class JobDetailsSerializer(serializers.ModelSerializer):
     company_phone = serializers.CharField(source='company.company_contact_number', read_only=True)
     company_size = serializers.IntegerField(source='company.company_size', read_only=True)
     salary_type = serializers.CharField(source='salary_type_id.name', read_only=True)
+    company_address = serializers.SerializerMethodField()
 
     class Meta:
         model = Job
@@ -149,5 +157,11 @@ class JobDetailsSerializer(serializers.ModelSerializer):
         if obj.company.company_logo:
             request = self.context.get('request')
             return str(request.build_absolute_uri(obj.company.company_logo.url))
+        else:
+            return None
+
+    def get_company_address(self, obj):
+        if obj.company:
+            return ZipAddressSerializer(obj.company.zip_address).data
         else:
             return None
