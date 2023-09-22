@@ -58,7 +58,7 @@ class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
         fields = ('id', 'industry', 'company_name', 'company_logo', 'company_contact_number',
-                  'company_website', 'company_size', 'industry_id')
+                  'company_website', 'company_size', 'industry_id', 'zip_address')
 
     def get_company_logo(self, company):
         if company.company_logo:
