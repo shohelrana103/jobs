@@ -5,5 +5,6 @@ urlpatterns = [
     path('states/<int:country_id>/', get_all_state),
     path('cities/<int:country_id>/', get_all_city),
     path('areas/<int:country_id>/', get_all_area),
-    path('degrees/', get_all_degrees)
+    path('degrees/', get_all_degrees),
+    path('get/zip/address/', get_address_by_zip)
 ]

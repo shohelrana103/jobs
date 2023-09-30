@@ -8,6 +8,8 @@ from ..models.state import State, StateSerializer
 from ..models.city import City, CitySerializer
 from ..models.area import Area, AreaSerializer
 from ..models.degree import Degree, DegreeSerializer
+from .zip_code import get_address_details
+from ..models.zip_address import ZipAddressSerializer
 
 
 @api_view(['GET'])
@@ -62,8 +64,7 @@ def get_all_city(request, country_id):
     content['status'] = 1
     content['message'] = 'Success'
     content['cities'] = serialized_jobs.data
-    return JsonResponse(content, status=status.HTTP_200_OK)\
-
+    return JsonResponse(content, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -99,3 +100,22 @@ def get_all_degrees(request):
     content['message'] = 'Success'
     content['areas'] = serialized_degree.data
     return JsonResponse(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes((TokenAuthentication,))
+# @permission_classes((IsAuthenticated,))
+def get_address_by_zip(request):
+    content = {
+        'status': 0
+    }
+    request_params = request.query_params
+    if 'zip_code' in request_params and request_params['zip_code'] is not None:
+        content['status'] = 1
+        zip_address = get_address_details(request_params['zip_code'])
+        content['zip_address'] = ZipAddressSerializer(zip_address).data
+        return JsonResponse(content, status=status.HTTP_200_OK)
+
+    else:
+        content['message'] = 'Zip code is require'
+        return JsonResponse(content, status=status.HTTP_400_BAD_REQUEST)
