@@ -241,14 +241,13 @@ def search_jobs(request):
     if "keyword" in query_params:
         keyword = query_params['keyword']
         jobs = jobs.filter(job_title__icontains=keyword)
-    if "country" in query_params:
-        country = query_params['country']
-        if country != 'all':
-            jobs = jobs.filter(country__id=country)
-    if "category" in query_params:
-        category = query_params['category']
-        if category != 'all':
-            jobs = jobs.filter(job_category__id=category)
+    if "zip_code" in query_params:
+        zip_code = query_params['zip_code']
+        jobs = jobs.filter(zip_code=zip_code)
+    if "category_id" in query_params:
+        category_id = query_params['category_id']
+        if category_id != 'all':
+            jobs = jobs.filter(job_category__id=category_id)
     send_data = []
     if "worker_id" in query_params:
         worker_id = query_params['worker_id']
