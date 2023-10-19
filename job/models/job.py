@@ -67,6 +67,7 @@ class Job(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     job_status = models.CharField(max_length=100, choices=JOB_STATUS, default=2)
+    is_feature = models.BooleanField(default=False)
 
     def __str__(self):
         return self.job_title
@@ -95,7 +96,7 @@ class JobSerializer(serializers.ModelSerializer):
             'id', 'job_title', 'company_name', 'no_of_vacancies', 'job_type', 'job_category',
             'application_deadline', 'salary_range', 'company_logo', 'company_website', 'about_company',
             'salary_type_id', 'job_description', 'company_email', 'company_phone', 'salary_type', 'zip_code',
-            'job_address', 'zip_address', 'company_address')
+            'job_address', 'zip_address', 'company_address', 'is_feature')
 
     def get_company_logo(self, obj):
         if obj.company.company_logo:

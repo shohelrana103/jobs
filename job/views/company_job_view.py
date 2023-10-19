@@ -242,6 +242,11 @@ def create_job_basic_information(request):
     #     job_responsibility = request.data['job_responsibility']
     #     application_deadline = request.data['application_deadline']
     #     no_of_vacancies = request.data['no_of_vacancies']
+    if 'is_feature' in request.data:
+        is_feature = bool(request.data['is_feature'])
+    else:
+        is_feature = False
+
     try:
         company = Company.objects.get(pk=user_id)
     except:
@@ -291,7 +296,8 @@ def create_job_basic_information(request):
         application_deadline=application_deadline,
         job_responsibilities=job_responsibility,
         job_description=job_description,
-        salary_type_id=salary_type
+        salary_type_id=salary_type,
+        is_feature=is_feature
     )
     content['status'] = 1
     content['message'] = 'Success'

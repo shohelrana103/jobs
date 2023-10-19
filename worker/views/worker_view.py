@@ -286,6 +286,7 @@ def set_worker_experiences(request):
                 is_currently_working=bool(experience['is_currently_working'])
             )
             experiences_to_add.append(created_experience)
+        worker.employment_history.clear()
         worker.employment_history.add(*experiences_to_add)
         content['status'] = 1
         content['message'] = 'Experience Set Successful'
